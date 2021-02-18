@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fork
+# key: fork
+# --
+for (int k = 0; k < ${1:N}; ++k) {
+  $0
+}

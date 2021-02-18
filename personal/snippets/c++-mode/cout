@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# contributor: York Zhao <gtdplatform@gmail.com>
+# expand-env: ((yas-indent-line 'auto) (yas-wrap-around-region 't))
+# name: cout
+# key: cout
+# --
+std::cout << $1 << std::endl;$0

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: bash
+# key: bash
+# --
+if [ "$(readlink /proc/$$/exe)" != "/bin/bash" ]; then
+   echo "This script should be run by bash." && exit 1
+fi

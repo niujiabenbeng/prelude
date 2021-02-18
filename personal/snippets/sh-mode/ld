@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: ld
+# key: ld
+# --
+LD_LIBRARY_PATH

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: disable all
+# key: disa
+# --
+# pylint: disable=all

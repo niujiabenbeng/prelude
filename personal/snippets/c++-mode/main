@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: main
+# key: main
+# --
+
+#include <gflags/gflags.h>
+#include <glog/logging.h>
+
+int main(int argc, char *argv[]) {
+  google::InitGoogleLogging(argv[0]);
+  google::LogToStderr();
+  google::ParseCommandLineFlags(&argc, &argv, true);
+
+  $0
+
+  return 0;
+}

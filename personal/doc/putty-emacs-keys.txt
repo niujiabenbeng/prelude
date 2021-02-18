@@ -1,0 +1,55 @@
+The following is tested in Windows 7 SP-1 using PuTTY 0.65 to connect to Ubuntu 14.04.
+Key responses of emacs are obtained by typing the keys and than C-h l.
+Key responses of cat are obtained by typing the keys in cat command.
+
+According to the results, we can get the following conclusions:
+1. For each arrow-related key the emacs response and the cat response are different. In each
+    character sequence symbol '[' and symbol 'O' are exchanged.
+2. Ctrl-prefixed arrow keys and Shift-prefixed arrow keys produce same character sequences.
+3. Other keys on keypad are the same except Backspace key.
+
+Responses of putty emacs keys
+---------------------------------------------------------------------------------------------
+                Normal    Ctrl      Shift     Alt       CrSh      CrAlt     ShAlt     CrShAlt
+=============================================================================================
+Left Arrow      \eOD      \e[D      \e[D      \e\eOD    \e[D      \e\e[D    \e\e[D    \e\e[D
+Right Arrow     \eOC      \e[C      \e[C      \e\eOC    \e[C      \e\e[C    \e\e[C    \e\e[C
+Up Arrow        \eOA      \e[A      \e[A      \e\eOA    \e[A      \e\e[A    \e\e[A    \e\e[A
+Down Arrow      \eOB      \e[B      \e[B      \e\eOB    \e[B      \e\e[B    \e\e[B    \e\e[B
+=============================================================================================
+Back Space      DEL       DEL       C-h       \eDEL     <>        \eDEL     \eC-h     <>
+Insert          \e[2~     <>        <putty>   \e\e[2~   <>        <>        <putty>   <>
+Delete          \e[3~     <>        \e[3~     \e\e[3~   <>        <w7>      \e\e[3~   <>
+Home            \e[1~     <>        \e[1~     \e\e[1~   <>        <>        \e\e[1~   <>
+End             \e[4~     <>        \e[4~     \e\e[4~   <>        <>        \e\e[4~   <>
+Page Up         \e[5~     <putty>   <putty>   \e\e[5~   <>        <putty>   <putty>   <>
+Page Down       \e[6~     <putty>   <putty>   \e\e[6~   <>        <putty>   <putty>   <>
+=============================================================================================
+
+Responses of putty cat keys
+---------------------------------------------------------------------------------------------
+                Normal    Ctrl      Shift     Alt       CrSh      CrAlt     ShAlt     CrShAlt
+=============================================================================================
+Left Arrow      \e[D      \eOD      \eOD      \e\e[D    \eOD      \e\eOD    \e\eOD    \e\eOD
+Right Arrow     \e[C      \eOC      \eOC      \e\e[C    \eOC      \e\eOC    \e\eOC    \e\eOC
+Up Arrow        \e[A      \eOA      \eOA      \e\e[A    \eOA      \e\eOA    \e\eOA    \e\eOA
+Down Arrow      \e[B      \eOB      \eOB      \e\e[B    \eOB      \e\eOB    \e\eOB    \e\eOB
+=============================================================================================
+Back Space      DEL       DEL       C-h       <>        <>        <>        \eC-h     <>
+Insert          \e[2~     <>        <putty>   \e\e[2~   <>        <>        <putty>   <>
+Delete          \e[3~     <>        \e[3~     \e\e[3~   <>        <w7>      \e\e[3~   <>
+Home            \e[1~     <>        \e[1~     \e\e[1~   <>        <>        \e\e[1~   <>
+End             \e[4~     <>        \e[4~     \e\e[4~   <>        <>        \e\e[4~   <>
+Page Up         \e[5~     <putty>   <putty>   \e\e[5~   <>        <putty>   <putty>   <>
+Page Down       \e[6~     <putty>   <putty>   \e\e[6~   <>        <putty>   <putty>   <>
+=============================================================================================
+
+Note:
+\e is escape (^[).
+^M is 0x13.
+<> means nothing happens.
+<putty> means PuTTY grabs it.
+<w7> means Windows 7 grabs it.
+
+Reference:
+http://emacswiki.org/emacs/PuTTY

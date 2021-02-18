@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: pylint disable head
+# key: dish
+# --
+# pylint: disable=unused-import
+# pylint: disable=wrong-import-order

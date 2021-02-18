@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: awk
+# key: awk
+# --
+awk -F'$1' '{print \$2}'
