@@ -1,7 +1,8 @@
 ;;; personal-modeline.el --- Additional modeline configuration.
 
 ;;; Commentary:
-;;; Additional modeline configuration.
+
+;; Additional modeline configuration.
 
 ;;; Code:
 
@@ -43,8 +44,6 @@
           (helm-build-sync-source "Minor mode: "
             :candidates minor-modes
             :action (lambda (m) (describe-minor-mode (intern m)))))))
-
-(define-key prelude-mode-map (kbd "C-c c m") 'personal-show-all-minor-mode)
 
 (provide 'personal-modeline)
 

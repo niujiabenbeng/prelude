@@ -1,7 +1,8 @@
 ;;; personal-helm-swoop.el --- A replacement of helm-occur.
 
 ;;; Commentary:
-;;; A replacement of helm-occur for better experience.
+
+;; A replacement of helm-occur for better experience.
 
 ;;; Code:
 

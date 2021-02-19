@@ -1,7 +1,8 @@
 ;;; personal-isearch.el --- Personal isearch settings.
 
 ;;; Commentary:
-;;; Enhancement of isearch functionality.
+
+;; Enhancement of isearch functionality.
 
 ;;; Code:
 

@@ -1,7 +1,8 @@
 ;;; personal-helm.el --- Additional helm settings.
 
 ;;; Commentary:
-;;; Additional helm settings after prelude-helm and prelude-helm-averywhere.
+
+;; Additional helm settings after prelude-helm and prelude-helm-averywhere.
 
 ;;; Code:
 
@@ -45,47 +46,8 @@
   (with-helm-alive-p
     (with-helm-window
       (recenter-top-bottom arg))))
-(define-key helm-map (kbd "C-l") 'personal-helm-recenter-window)
 
-;;; disable some keybindings in helm-map which are used rarely.
-(let ((map helm-command-map))
-  ;; <prefix C-c SPC> run: helm-all-mark-rings, alternative: <prefix SPC>
-  ;; <prefix C-c f>   run: helm-recentf, alternative: <C-c c f>
-  ;; <prefix C-c g>   run: helm-google-suggest
-  ;; <prefix C-c w>   run: helm-wikipedia-suggest
-  ;; <prefix C-c C-x> run: helm-run-external-command
-  (define-key map (kbd "C-c") nil)
-  ;; <prefix C-x C-b> run: helm-buffers-list, alternative: <C-x C-b>
-  ;; <prefix C-x C-f> run: helm-find-files, alternative: <C-x C-f>
-  ;; <prefix C-x r b> run: helm-filtered-bookmarks
-  ;; <prefix C-x r i> run: helm-register
-  (define-key map (kbd "C-x") nil)
-  ;; <prefix M-g a>   run: helm-do-grep-ag
-  ;; <prefix M-g i>   run: helm-gid
-  (define-key map (kbd "M-g") nil)
-  ;; <prefix M-s o>   run: helm-occur, alternative: <C-o>, <prefix o>
-  (define-key map (kbd "M-s") nil)
-  ;; <ESC> is the prefix of Ctrl/Meta key
-  (define-key map (kbd "ESC") nil)
-  ;; <prefix h g>     run: helm-info-gnus
-  ;; <prefix h h>     run: helm-documentation
-  ;; <prefix h i>     run: helm-info-at-point
-  ;; <prefix h r>     run: helm-info-emacs
-  (define-key map (kbd "h") nil)
-  ;; below is some ordinary keybindings
-  (define-key map (kbd "8")   nil) ;; run: helm-ucs (unicode support)
-  (define-key map (kbd "r")   nil) ;; run: helm-regexp, too slow
-  (define-key map (kbd "/")   nil) ;; run: helm-find, alternative: <C-c p f>
-  (define-key map (kbd "F")   nil) ;; run: helm-select-xfont
-  (define-key map (kbd "a")   nil) ;; run: helm-apropos, alternative: <C-h f>
-  (define-key map (kbd "m")   nil) ;; run: helm-man-woman
-  (define-key map (kbd "p")   nil) ;; run: helm-list-emacs-process
-  (define-key map (kbd "s")   nil) ;; run: helm-surfraw
-  (define-key map (kbd "t")   nil) ;; run: helm-top
-  (define-key map (kbd "C-:") nil) ;; run: helm-eval-expression-with-eldoc
-  ;; rebind some keys for consistency
-  (define-key map (kbd "C-,") nil) ;; run: helm-calcul-expression
-  (define-key map (kbd ",") 'helm-calcul-expression))
+(define-key helm-map (kbd "C-l") 'personal-helm-recenter-window)
 
 (provide 'personal-helm)
 

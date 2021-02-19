@@ -11,8 +11,7 @@
 (add-to-list 'load-path (expand-file-name "packages" prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "programs" prelude-personal-dir))
 
-(prelude-require-packages
- '(neotree))
+(prelude-require-packages '(neotree yasnippet))
 
 ;;; Load prelude modules
 (require 'prelude-helm)
@@ -26,13 +25,14 @@
 
 ;;; Load personal configurations.
 (require 'personal-putty-keys)
+(require 'personal-mode)
 (require 'personal-keys)
 (require 'personal-editor)
-(require 'personal-dired)
 (require 'personal-neotree)
 (require 'personal-isearch)
 (require 'personal-helm)
 (require 'personal-helm-swoop)
+(require 'personal-dired)
 (require 'personal-modeline)
 
 ;;; Programming languages support

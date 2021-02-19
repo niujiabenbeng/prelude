@@ -1,7 +1,5 @@
 ;;; personal-mode.el --- personal configuration: minor mode
 
-;; Added by Chen Li @ 2021.02.18
-
 ;;; Commentary:
 
 ;; An alternative minor mode of prelude-mode.
@@ -9,8 +7,10 @@
 ;;; Code
 
 (require 'crux)
+(require 'neotree)
 (require 'windmove)
-(require 'personal-movetext)
+(require 'personal-util)
+(require 'personal-windows)
 
 (defun personal-display-path ()
   "Display path in echo area."
@@ -47,6 +47,7 @@
     (define-key map (kbd "C-c c s") 'personal-swap-windows)
     (define-key map (kbd "C-c c d") 'crux-delete-file-and-buffer)
     (define-key map (kbd "C-c c o") 'crux-duplicate-current-line-or-region)
+    (define-key map (kbd "C-c c O") 'crux-duplicate-and-comment-current-line-or-region)
     (define-key map (kbd "C-c c r") 'crux-rename-buffer-and-file)
     (define-key map (kbd "C-c c k") 'personal-kill-other-buffers)
     (define-key map (kbd "C-c c u") 'personal-find-confiuration-file)
@@ -54,16 +55,13 @@
     (define-key map (kbd "C-c 4 j") 'personal-jump-to-file-at-point-other-window)
     (define-key map (kbd "C-c c i") 'helm-imenu)
     (define-key map (kbd "C-c p")   'projectile-command-map)
+    (define-key map (kbd "C-c c p") 'personal-display-path)
+    (define-key map (kbd "C-c c w") 'personal-neotree-default-windows)
     ;; disable the following keys
     (define-key map (kbd "C-c c c") 'personal-dumb-command)
     (define-key map (kbd "C-c C-c") 'personal-dumb-command)
     map)
   "Keymap for Personal mode.")
-
-
-;; (define-key personal-mode-map (kbd "C-c c p") 'personal-display-path)
-;; (define-key personal-mode-map (kbd "C-c c w") 'personal-neotree-default-windows)
-
 
 ;; define minor mode
 (define-minor-mode personal-mode
