@@ -1,13 +1,14 @@
 ;;; personal-neotree.el --- neotree configuration.
 
 ;;; Commentary:
-;;; personal neotree configuration.
+
+;; personal neotree configurations.
 
 ;;; Code:
 
 (prelude-require-package 'neotree)
 (require 'neotree)
-(require 's)
+(require 'projectile)
 
 (defvar personal-neotree-hidden-regexp-list
   '("^\\." "\\.pyc$" "~$" "^#.*#$" "\\.elc$" "\\.o$" "__pycache__" "\\.d$")
@@ -59,7 +60,7 @@ No horizontal window exists."
     (list :cur cur :neo neo :left left :right right)))
 
 (defun personal-neotree-other-window (&optional windows)
-  "Return window other than selected from default window configuration."
+  "Return window other than the selected from default window configuration."
   (setq windows (or windows (personal-neotree-default-windows)))
   (let ((left    (plist-get windows :left))
         (right   (plist-get windows :right))
@@ -78,12 +79,11 @@ No horizontal window exists."
 
 (defmacro personal-display-result (winpos &rest body)
   "Execute BODY and display result in window specified by WINPOS."
-  `(let ((curpos (point)) buf pos)
+  `(let (buf pos)
      (save-window-excursion
        (save-excursion
          (progn ,@body)
-         (setq buf (current-buffer))
-         (setq pos (point))))
+         (setq buf (current-buffer) pos (point))))
      (cond
       ((eq ,winpos 'left)
        (select-window (personal-neotree-left-window)))
@@ -116,27 +116,40 @@ No horizontal window exists."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; local functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun personal-neotree-set-hidden-regexp-list ()
-  "Set `neo-hidden-regexp-list' based on `.neoignore'."
+(defun personal-neotree-get-ignore-file ()
+  "If `.neoignore' is found, return the full path, else return nil."
+  (let ((filename (buffer-file-name)) dirname)
+    ;; if we are in neotree buffer, use the root directory of neotree window
+    (and (eq (select-window) (neo-global--get-window))
+         (file-directory-p neo-buffer--start-node)
+         (setq dirname neo-buffer--start-node))
+    ;; if dirname is nil, use `protjectile-project-root'
+    (when (not dirname) (setq dirname (projectile-project-root)))
+    ;; if dirname is nil, search `.neoignore' through the directory
+    (when (and filename (not dirname))
+      (setq dirname (locate-dominating-file filename ".neoignore")))
+    ;; if dirname is nil, use the value of `default-directory'
+    (setq filename (expand-file-name ".neoignore" dirname))
+    (if (file-exists-p filename) filename nil)))
 
+(defun personal-neotree-set-hidden-regexp-list ()
+  "Set `neo-hidden-regexp-list' based on ignore file."
   (setq neo-hidden-regexp-list personal-neotree-hidden-regexp-list)
-  ;; `eno-buffer--start-node' is the root directory of neotree buffer
-  (when (and neo-buffer--start-node (file-directory-p neo-buffer--start-node))
-    (let ((file (expand-file-name ".neoignore" neo-buffer--start-node)))
-      (when (file-exists-p file)
-        (setq neo-hidden-regexp-list
-              (with-temp-buffer
-                (insert-file-contents file)
-                (split-string (buffer-string))))))))
+  (let* ((ignore-file (personal-neotree-get-ignore-file)))
+    (setq neo-hidden-regexp-list
+          (with-temp-buffer
+            (insert-file-contents file)
+            (split-string (buffer-string))))))
 
 (defun personal-neotree-project-dir ()
-  "Open NeoTree using the git root."
+  "Open NeoTree using the projectile root."
   (interactive)
   (let ((path (buffer-file-name)) name)
     (neotree-toggle)
     (personal-neotree-set-hidden-regexp-list)
     (when (and path (neo-global--window-exists-p))
       (setq name (file-name-nondirectory path))
+      ;; show hidden file when current file is hidden.
       (neo-buffer--set-show-hidden-file-p
        (seq-filter (lambda (x) (string-match-p x name))
                    neo-hidden-regexp-list))
@@ -202,26 +215,24 @@ No horizontal window exists."
 (setq projectile-switch-project-action 'neotree-projectile-action)
 
 (global-set-key [f4] 'personal-neotree-project-dir)
-(define-key prelude-mode-map (kbd "C-c c w") 'personal-neotree-default-windows)
-(define-key prelude-mode-map (kbd "C-c c p") 'personal-display-path)
+;; (define-key personal-mode-map (kbd "C-c c p") 'personal-display-path)
+;; (define-key personal-mode-map (kbd "C-c c w") 'personal-neotree-default-windows)
 
-;;; make convinient key-bindings, we do not modify the official key bindings,
-;;; instead we make alternative key bindings for personal use.
+;; make convinient key-bindings, we do not modify the official key bindings,
+;; instead we make alternative key bindings for personal use.
 (let ((map neotree-mode-map))
   (define-key map (kbd "{")       'shrink-window-horizontally)
   (define-key map (kbd "}")       'enlarge-window-horizontally)
+  (define-key map (kbd "g")       'neotree-refresh)
+  (define-key map (kbd "a")       'neotree-collapse-all)
   (define-key map (kbd "h")       'neotree-hidden-file-toggle)
-  (define-key map (kbd "^")       'personal-neotree-parent-root)
   (define-key map [(ctrl up)]     'personal-neotree-previous-dir)
   (define-key map [(ctrl down)]   'personal-neotree-next-dir)
-  (define-key map (kbd "C-c d h") 'neotree-hidden-file-toggle)
   (define-key map (kbd "C-c d +") 'neotree-create-node)
   (define-key map (kbd "C-c d C") 'neotree-copy-node)
   (define-key map (kbd "C-c d D") 'neotree-delete-node)
   (define-key map (kbd "C-c d R") 'neotree-rename-node)
-  (define-key map (kbd "C-c d d") 'neotree-dir)
-  (define-key map (kbd "C-c d r") 'neotree-change-root)
-  (define-key map (kbd "C-c d a") 'neotree-collapse-all))
+  (define-key map (kbd "C-c d d") 'neotree-dir))
 
 (let ((map neotree-mode-map))
   (define-key map (kbd "TAB")

@@ -125,7 +125,8 @@
 ;;; personal keybindings, also use prelude mode map
 (let ((map prelude-mode-map))
   (define-key map (kbd "C-c c c")   'personal-dumb-command)
-  (define-key map (kbd "C-c C-c")   'personal-dumb-command))
+  (define-key map (kbd "C-c C-c")   'personal-dumb-command)
+  )
 
 ;;; personal keybindings for pair manipulation
 (let ((map smartparens-mode-map))
