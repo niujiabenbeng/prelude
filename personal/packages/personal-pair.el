@@ -1,7 +1,11 @@
 ;;; personal-pair.el --- Pair manipulation.
 
 ;;; Commentary:
-;;; Additional pair manipulation along with `smartparens`.
+
+;; Additional pair manipulation along with `smartparens`.
+
+;; NOTE: The code of this module is deprecated. It should be reviewed (and
+;; rewrite if necessary) before applying to emacs environment.
 
 ;;; Code:
 

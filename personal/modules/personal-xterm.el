@@ -1,7 +1,8 @@
 ;;; personal-xterm.el --- xterm configuration.
 
 ;;; Commentary:
-;;; personal xterm configuration.
+
+;; personal xterm configuration.
 
 ;;; Code:
 

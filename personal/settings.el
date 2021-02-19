@@ -11,6 +11,9 @@
 (add-to-list 'load-path (expand-file-name "packages" prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "programs" prelude-personal-dir))
 
+(prelude-require-packages
+ '(neotree))
+
 ;;; Load prelude modules
 (require 'prelude-helm)
 (require 'prelude-helm-everywhere)

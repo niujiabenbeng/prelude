@@ -12,6 +12,13 @@
 (require 'windmove)
 (require 'personal-movetext)
 
+(defun personal-display-path ()
+  "Display path in echo area."
+  (interactive)
+  (cond ((eq (current-buffer) (neo-global--get-buffer))
+         (message (neo-buffer--get-filename-current-line)))
+        (t (message (buffer-file-name)))))
+
 (defun personal-swap-windows ()
   "Swap windows occurding to current window position."
   (interactive)
@@ -52,6 +59,11 @@
     (define-key map (kbd "C-c C-c") 'personal-dumb-command)
     map)
   "Keymap for Personal mode.")
+
+
+;; (define-key personal-mode-map (kbd "C-c c p") 'personal-display-path)
+;; (define-key personal-mode-map (kbd "C-c c w") 'personal-neotree-default-windows)
+
 
 ;; define minor mode
 (define-minor-mode personal-mode

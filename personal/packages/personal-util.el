@@ -1,12 +1,9 @@
 ;;; -*- lexical-binding: t; -*-
 ;;; personal-util.el --- Utilities for personal needs.
-;;; Added by Chen Li@2020.04.13
 
 ;;; Commentary:
-;;; Utilities for personal needs.
-;;; As a supplementary configuration, this file may change some default
-;;; functions of Prelude Emacs and add some additional features to meet
-;;; personal needs.
+
+;; Utilities for personal needs.
 
 ;;; Code:
 
@@ -15,7 +12,6 @@
 (require 'helm)
 (require 'subr-x)
 (require 'compile)
-(defvar prelude-personal-dir)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-pattern-replace ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -74,6 +70,7 @@
 
 (defun personal-add-shebang-c-header ()
   "Add shebang for c header file."
+  ;; TODO: remove previous shebang
   (let* ((line (thing-at-point 'line t))
          (path (buffer-file-name))
          (head (file-name-nondirectory path))
@@ -169,17 +166,6 @@
       (setq nok nil))
     (when nok
       (message "Not find command to run."))))
-
-;;;;;;;;;;;;;;;;;;;;;;; personal-elisp-run-shell-script ;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun personal-elisp-run-shell-script (cmd)
-  "Run shell script in elisp and return the result."
-  (shell-command-to-string
-   (concat (format "source %s\n%s"
-                   (expand-file-name
-                    "packages/personal-shutil.sh"
-                    prelude-personal-dir)
-                   cmd))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-comment-line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

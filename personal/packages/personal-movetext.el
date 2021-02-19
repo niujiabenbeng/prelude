@@ -1,8 +1,8 @@
 ;;; personal-movetext.el --- Move text functionality for Prelude Emacs.
-;;; Added by Chen Li@2020.04.02
 
 ;;; Commentary:
-;;; Move text left, right, up, and down.
+
+;; Move text left, right, up, and down, while preseving the cursor point.
 
 ;;; Code:
 
