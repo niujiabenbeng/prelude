@@ -45,7 +45,6 @@
 
 ;; enable hs-minor-mode for all programming modes.
 (add-hook 'prog-mode-hook #'hs-minor-mode)
-(add-hook 'hs-minor-mode-hook (lambda () (diminish 'hs-minor-mode)))
 
 ;; whitespace-mode has some bugs on tab and indentation. but it is not to be
 ;; disabled because it provides some other useful features. here we make the

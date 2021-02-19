@@ -10,8 +10,8 @@
 (require 'helm-config)
 (require 'helm-buffers)
 
-;;; retrieve the helm previous behavior, see link below for more info
-;;;   https://github.com/emacs-helm/helm/issues/2175
+;; retrieve the helm previous behavior, see link below for more info
+;;   https://github.com/emacs-helm/helm/issues/2175
 (define-key helm-map (kbd "<left>") 'helm-previous-source)
 (define-key helm-map (kbd "<right>") 'helm-next-source)
 (customize-set-variable 'helm-ff-lynx-style-map t)
@@ -20,22 +20,22 @@
 (customize-set-variable 'helm-occur-use-ioccur-style-keys t)
 (customize-set-variable 'helm-window-prefer-horizontal-split t)
 
-;;; make tab completion available with helm, see:
-;;;   https://tuhdo.github.io/helm-intro.html
+;; make tab completion available with helm, see:
+;;   https://tuhdo.github.io/helm-intro.html
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 (define-key helm-map (kbd "C-z") 'helm-select-action)
 
-;;; echo input in header line, see:
-;;;   https://emacs-china.org/t/helm-minibuffer/8884/5
+;; echo input in header line, see:
+;;   https://emacs-china.org/t/helm-minibuffer/8884/5
 (setq helm-echo-input-in-header-line t)
 (add-hook 'helm-minibuffer-set-up-hook #'helm-hide-minibuffer-maybe)
 
-;;; Use <C-o> for easy use of helm-occur
+;; Use <C-o> for easy use of helm-occur
 (global-set-key (kbd "C-o") 'helm-occur)
 (global-set-key (kbd "C-h b") 'helm-descbinds)
 
-;;; add bookmark to `helm-mini-default-sources'
+;; add bookmark to `helm-mini-default-sources'
 (setq helm-mini-default-sources '(helm-source-buffers-list
                                   helm-source-recentf
                                   helm-source-bookmarks))
@@ -46,7 +46,6 @@
   (with-helm-alive-p
     (with-helm-window
       (recenter-top-bottom arg))))
-
 (define-key helm-map (kbd "C-l") 'personal-helm-recenter-window)
 
 (provide 'personal-helm)
