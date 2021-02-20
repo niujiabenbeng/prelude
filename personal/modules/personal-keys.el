@@ -10,28 +10,28 @@
 (require 'prelude-mode)
 (require 'personal-mode)
 (require 'personal-util)
+(require 'personal-pair)
 (require 'personal-movetext)
 
 ;; change prelude-mode to personal-mode
 (prelude-mode -1)
 (personal-mode 1)
 
-;; use smartparens keybindings
+;; smartparens-mode has a lot of rarely-used commands.
+;; we disable all keybindings in smartparens-mode-map and define our own.
 (setf (cdr smartparens-mode-map) nil)
-(sp-use-smartparens-bindings)
-
-;; disable some keybindings in smartparens-mode-map
-;; all arraw keys and function keys are reserved to global keymap.
 (let ((map smartparens-mode-map))
-  (define-key map [C-left]        nil)
-  (define-key map [C-right]       nil)
-  (define-key map [M-delete]      nil)
-  (define-key map [M-backspace]   nil)
-  (define-key map [C-M-left]      nil)
-  (define-key map [C-M-right]     nil)
-  (define-key map [C-M-delete]    nil)
-  (define-key map [C-M-backspace] nil)
-  (define-key map [C-S-backspace] nil))
+  (define-key map (kbd "C-M-f") (personal-restrict-to-pairs sp-forward-sexp))
+  (define-key map (kbd "C-M-b") (personal-restrict-to-pairs sp-backward-sexp))
+  (define-key map (kbd "C-M-a") 'sp-beginning-of-sexp)
+  (define-key map (kbd "C-M-e") 'sp-end-of-sexp)
+  (define-key map (kbd "C-M-p") 'personal-goto-pair)
+  (define-key map (kbd "C-M-@") 'personal-mark-pair)
+  (define-key map (kbd "C-M-w") 'personal-copy-pair)
+  (define-key map (kbd "C-M-k") 'personal-kill-pair)
+  (define-key map (kbd "C-M-u") 'sp-splice-sexp)
+  (define-key map (kbd "C-M--") 'sp-forward-slurp-sexp)
+  (define-key map (kbd "C-M-=") 'sp-forward-barf-sexp))
 
 ;; disable default windmove key bindings. S-{left, right, up, down} are
 ;; reserved for shift selection.

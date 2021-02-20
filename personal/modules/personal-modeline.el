@@ -22,6 +22,7 @@
 (add-hook 'emacs-lisp-mode  #'personal-diminish-all t)
 (add-hook 'python-mode-hook #'personal-diminish-all t)
 (add-hook 'c++-mode-hook    #'personal-diminish-all t)
+(add-hook 'prog-mode-hook   #'personal-diminish-all t)
 
 (defun personal-show-all-minor-mode ()
   "Show all minor modes in Helm buffer."
