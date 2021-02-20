@@ -17,10 +17,9 @@
 
 (defun personal-cutting-line-p ()
   "Return true if current line is cutting line."
-  (and (> (buffer-size) 0)
-       (string-match-p
-        "^\\([;#/]\\).+\\1$"
-        (string-trim (thing-at-point 'line t)))))
+  (string-match-p
+   "^\\([;#/]\\).+\\1$"
+   (string-trim (or (thing-at-point 'line t) ""))))
 
 (defun personal-format-cutting-line ()
   "Format the cutting line (assume the current line is cutting line)."
@@ -57,44 +56,68 @@
 
 (defun personal-add-shebang-python ()
   "Add shebang for python file."
-  (let ((line (thing-at-point 'line t)))
-    (unless (and line (string-prefix-p "#!" line))
-      (insert "#! /home/chenli/Documents/tools/anaconda3/envs/pytorch/bin/python\n")
+  (let ((line (or (thing-at-point 'line t) "")))
+    (if (string-prefix-p "#!" line)
+        (message "header is already configured.")
+      (insert "#! %s\n" ((shell-command-to-string "which python")))
       (insert "# coding: utf-8\n"))))
 
 (defun personal-add-shebang-shell ()
   "Add shebang for shell file."
-  (let ((line (thing-at-point 'line t)))
-    (unless (and line (string-prefix-p "#!" line))
+  (let ((line (or (thing-at-point 'line t) "")))
+    (if (string-prefix-p "#!" line)
+        (message "header is already configured.")
       (insert "#! /bin/bash\n"))))
 
 (defun personal-add-shebang-c-header ()
   "Add shebang for c header file."
-  ;; TODO: remove previous shebang
-  (let* ((line (thing-at-point 'line t))
-         (path (buffer-file-name))
+  (let* ((path (buffer-file-name))
          (head (file-name-nondirectory path))
-         (pos  (string-match "[^/]+/\\(include\\|src\\)/" path)))
-    (unless (and line (string-prefix-p "#ifndef" line))
-      (when pos
-        (setq head (substring path pos))
-        (setq head (s-replace "/include/" "_" head))
-        (setq head (s-replace "/src/" "_" head)))
-      (setq head (replace-regexp-in-string "[^[:alnum:]]" "_" head))
-      (setq head (upcase (concat head "_")))
-      (insert (format "#ifndef %s\n" head))
-      (insert (format "#define %s\n\n" head))
-      (save-excursion
+         (posi (string-match "[^/]+/\\(include\\|src\\)/" path))
+         (line (or (thing-at-point 'line t) "")))
+    (when posi
+      (setq head (substring path posi))
+      (setq head (replace-regexp-in-string "/\\(include\\|src\\)/" "_" head)))
+    (setq head (replace-regexp-in-string "[^[:alnum:]]" "_" head))
+    (setq head (upcase (concat head "_")))
+
+    (if (string= (format "#ifndef %s\n" head) line)
+        (message "header is already configured.")
+      (if (string-prefix-p "#ifndef" line)
+          ;; 如果之前已经存在但名称不同, 则替换名称
+          (let ((text (string-trim (substring line (length "#ifndef")))))
+            (while (re-search-forward text nil t) (replace-match head)))
+        ;; 如果之前不存在, 则插入新的
+        (insert (format "#ifndef %s\n" head))
+        (insert (format "#define %s\n\n" head))
         (goto-char (point-max))
-        (insert (format "\n#endif  // %s\n" head))))))
+        (insert (format "\n#endif  // %s\n" head)))
+      ;; 跳转到第三行
+      (goto-line 3))))
+
+(defun personal-add-shebang-elisp ()
+  "Add shebang for emacs lisp file."
+  (let ((name (file-name-nondirectory (buffer-file-name)))
+        (line (or (thing-at-point 'line t) ""))
+        (head ";;; -*- lexical-binding: t; -*-\n"))
+    (if (string= line head)
+        (message "header is already configured.")
+      (insert (format "%s;;; %s --- \n\n" head name))
+      (insert ";;; Commentary:\n\n;;\n\n;;;Code:\n\n")
+      (goto-char (point-max))
+      (insert (format "\n;;; %s ends here\n" name))
+      (goto-line 2)
+      (end-of-line))))
 
 (defun personal-add-shebang ()
   "Add shebang according to file extension."
-  (let ((ext (file-name-extension (buffer-file-name))))
-    (cond ((string-equal ext "py")   (personal-add-shebang-python))
-          ((string-equal ext "h")    (personal-add-shebang-c-header))
-          ((string-equal ext "hpp")  (personal-add-shebang-c-header))
-          ((string-equal ext "sh")   (personal-add-shebang-shell))
+  (let ((ext (file-name-extension (or (buffer-file-name) ""))))
+    (cond ((null ext) (message "file has no extension."))
+          ((string= ext "py")  (personal-add-shebang-python))
+          ((string= ext "h")   (personal-add-shebang-c-header))
+          ((string= ext "hpp") (personal-add-shebang-c-header))
+          ((string= ext "sh")  (personal-add-shebang-shell))
+          ((string= ext "el")  (personal-add-shebang-elisp))
           (t (message ".%s is not supported yet." ext)))))
 
 (defun personal-pattern-replace ()
