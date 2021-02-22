@@ -23,15 +23,15 @@
 (let ((map smartparens-mode-map))
   (define-key map (kbd "C-M-f") (personal-restrict-to-pairs sp-forward-sexp))
   (define-key map (kbd "C-M-b") (personal-restrict-to-pairs sp-backward-sexp))
-  (define-key map (kbd "C-M-a") 'sp-beginning-of-sexp)
-  (define-key map (kbd "C-M-e") 'sp-end-of-sexp)
   (define-key map (kbd "C-M-p") 'personal-goto-pair)
   (define-key map (kbd "C-M-@") 'personal-mark-pair)
   (define-key map (kbd "C-M-w") 'personal-copy-pair)
   (define-key map (kbd "C-M-k") 'personal-kill-pair)
   (define-key map (kbd "C-M-u") 'sp-splice-sexp)
   (define-key map (kbd "C-M--") 'sp-forward-slurp-sexp)
-  (define-key map (kbd "C-M-=") 'sp-forward-barf-sexp))
+  (define-key map (kbd "C-M-=") 'sp-forward-barf-sexp)
+  (define-key map (kbd "C-M-_") 'sp-backward-barf-sexp)
+  (define-key map (kbd "C-M-+") 'sp-backward-slurp-sexp))
 
 ;; disable default windmove key bindings. S-{left, right, up, down} are
 ;; reserved for shift selection.

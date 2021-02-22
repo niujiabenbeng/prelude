@@ -66,7 +66,9 @@
     `(defun ,(intern name) (&optional _arg)
        ,(format "Balanced pair restricted version of `%s'." function)
        (interactive "P")
-       ;; the last argument: evaluate the symbol function then quote the result
+       ;; the last argument:
+       ;;   first evaluate the symbol function, then quote the result.
+       ;; here `sp-restrict-to-pairs' does not work, I don't know why.
        (sp-restrict-to-object 'sp-prefix-pair-object ',function))))
 
 (provide 'personal-pair)
