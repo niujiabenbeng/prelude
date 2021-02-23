@@ -26,6 +26,7 @@
       lsp-enable-symbol-highlighting nil
       lsp-enable-text-document-color nil
       lsp-enable-links nil
+      lsp-headerline-breadcrumb-enable nil
 
       lsp-enable-indentation nil
       lsp-enable-on-type-formatting nil)
