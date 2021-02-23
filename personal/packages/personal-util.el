@@ -131,64 +131,34 @@
 
 (defun personal-extract-shell-command ()
   "Extract all shell snippets on markdown format."
-  (let ((pattern "\\(\"\"\"\\|```\\|'''\\)[[:space:]]*[Ss]hell[[:ascii:]]*?\\1$")
-        cmds cmd beg end prefix ok line)
+  (declare (obsolete nil "2021.02.22"))
+  (let ((pattern "```[[:space:]]?\\([sS]hell\\)?\\([^`]+\\)```$")
+        command commands prefix)
     (save-excursion
       (goto-char (point-min))
       (while (re-search-forward pattern nil t)
-        (setq beg (match-beginning 0)
-              end (match-end 0)
-              cmd "")
-        ;; 从第一行提取prefix
-        (goto-char beg)
-        (setq prefix (string-trim-right
-                      (filter-buffer-substring
-                       (line-beginning-position) beg)))
-        ;; command从第二行开始
-        (setq beg (progn (forward-line) (point)))
-        ;; 检查最后一行是否匹配第一行的prefix
-        (goto-char end)
-        (setq ok (string-prefix-p prefix (thing-at-point 'line t)))
-        ;; command到倒数第二行结束
-        (setq end (line-beginning-position))
-        ;; 从中间行提取command
-        (goto-char beg)
-        (while (and ok (< (point) end))
-          (setq line (thing-at-point 'line t))
-          (setq ok (string-prefix-p prefix line))
-          (when ok
-            (setq cmd (concat cmd (substring line (length prefix)))))
-          (forward-line))
-        (when ok (setq cmds (cons (string-trim-right cmd) cmds))))
-      (reverse cmds))))
+        (setq command (match-string-no-properties 2))
+        (save-excursion
+          (goto-char (match-beginning 0))
+          (setq prefix (string-trim-right
+                        (buffer-substring-no-properties
+                         (line-beginning-position) (point)))))
+        (unless (string-empty-p prefix)
+          (setq command (s-replace (concat "\n" prefix) "\n" command)))
+        (setq commands (cons (string-trim command) commands))))
+    (reverse commands)))
 
 (defun personal-run-current-script ()
   "Run current script using Shebang."
   (interactive)
-  (when (null (buffer-file-name)) (save-buffer))
-  (when (buffer-modified-p) (save-buffer))
-  (let ((command (personal-extract-shell-command))
-        (shebang (buffer-substring-no-properties 1 3))
-        (nok t))
-    ;; check whether a compilation process is running or not
-    (when compilation-in-progress
-      (message "The compilation process is running.")
-      (setq nok nil))
-    (when (and nok command)
-      (if (= (length command) 1)
-          (compile (car command) t)
-        ;; 这里参考: https://www.cnblogs.com/astropeak/p/6219857.html
-        (helm :sources
-              (helm-build-sync-source "Shell Commands"
-                :candidates 'command
-                :multiline 400
-                :action (lambda (c) (compile c t)))))
-      (setq nok nil))
-    (when (and nok (string= shebang "#!"))
-      (compile (buffer-file-name) t)
-      (setq nok nil))
-    (when nok
-      (message "Not find command to run."))))
+  (if (null (buffer-file-name))
+      (message "Current buffer is not attached to any file.")
+    (when (buffer-modified-p) (save-buffer))
+    (if (string= (buffer-substring-no-properties 1 3) "#!")
+        (if compilation-in-progress
+            (message "The compilation process is running.")
+          (compile (buffer-file-name) t))
+      (message "Current file does not have a shebang line."))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-comment-line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
