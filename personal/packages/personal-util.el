@@ -59,7 +59,7 @@
   (let ((line (or (thing-at-point 'line t) "")))
     (if (string-prefix-p "#!" line)
         (message "header is already configured.")
-      (insert "#! %s\n" ((shell-command-to-string "which python")))
+      (insert "#! /usr/bin/env python\n" )
       (insert "# coding: utf-8\n"))))
 
 (defun personal-add-shebang-shell ()
