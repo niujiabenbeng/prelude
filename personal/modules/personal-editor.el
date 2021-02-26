@@ -39,8 +39,8 @@
 
 ;; set yasnippet, do not use yasnippet-snippets.
 (require 'yasnippet)
-(add-to-list 'yas-snippet-dirs
-             (expand-file-name "snippets" prelude-personal-dir))
+(setq yas-snippet-dirs
+      (list (expand-file-name "snippets" prelude-personal-dir)))
 (yas-global-mode 1)
 
 ;; enable hs-minor-mode for all programming modes.
@@ -71,6 +71,9 @@
 ;; solve the issue: `helm-M-x' produces duplicates items.
 ;; see: https://github.com/emacs-helm/helm/issues/2291
 (setq history-delete-duplicates t)
+
+;; do not kill old compile processes
+(setq compilation-always-kill nil)
 
 (provide 'personal-editor)
 

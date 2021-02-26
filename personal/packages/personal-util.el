@@ -235,7 +235,7 @@ FIELDS should be a symbol or a list of symbols, and can be values below:
    - name:    sort by name
    - length:  sort by length of name
    - existp:  sort by existence
-   - recent   sort by recently visited time."
+   - recent:  sort by recently visited time."
   (and fields (symbolp fields) (setq fields (list fields)))
   (let ((name (cdr candidate)) (key ""))
     (dolist (field fields)
@@ -337,6 +337,7 @@ otherwise return nil."
                        candidates personal--fcf-testfile-root)))
    (let ((sp (not (eq personal--fcf-testfile-show-type 'snmn)))
          (root personal--fcf-testfile-root) extends name path)
+     ;; 将`helm-pattern'中的内容分离为文件名和扩展名
      (dolist (elem (split-string helm-pattern))
        (let ((pair (assoc elem personal--fcf-testfile-dir)))
          (if pair (push pair extends) (push elem name))))
@@ -389,22 +390,25 @@ otherwise return nil."
     "preload/presetting.el"
     "programs/personal-cc-lsp.el"
     "programs/personal-cc.el"
-    "programs/personal-clang-format.el"
     "programs/personal-emacs-lisp.el"
     "programs/personal-lsp.el"
     "programs/personal-programming.el"
     "programs/personal-python-lsp.el"
     "programs/personal-python.el"
     "programs/personal-shell.el"
-    "modules/personal-keys.el"
     "modules/personal-editor.el"
     "modules/personal-helm-swoop.el"
     "modules/personal-helm.el"
     "modules/personal-isearch.el"
+    "modules/personal-keys.el"
+    "modules/personal-mode.el"
+    "modules/personal-modeline.el"
     "modules/personal-neotree.el"
     "packages/personal-movetext.el"
     "packages/personal-pair.el"
-    "packages/personal-util.el")
+    "packages/personal-util.el"
+    "packages/personal-windows.el"
+    )
   "Configuration files for emacs environment.")
 
 (defvar personal--fcf-emacs-show-type 'spmn

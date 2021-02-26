@@ -27,6 +27,7 @@
 (defun personal-show-all-minor-mode ()
   "Show all minor modes in Helm buffer."
   (interactive)
+  (declare (obsolete nil "2021.02.26"))
   ;; borrowed from source code: `describe-mode'
   (let (minor-modes)
     ;; Older packages do not register in minor-mode-list but only in
