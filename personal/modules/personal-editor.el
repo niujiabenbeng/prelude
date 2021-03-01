@@ -75,6 +75,12 @@
 ;; do not kill old compile processes
 (setq compilation-always-kill nil)
 
+;; prelude advised `yank' and `yank-pop' to automatically indent yanked text,
+;; but it is not properly behaved in some major modes such as `makefile-mode'.
+;; here we remove the advice.
+(ad-deactivate #'yank)
+(ad-deactivate #'yank-pop)
+
 (provide 'personal-editor)
 
 ;;; personal-editor.el ends here
