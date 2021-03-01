@@ -1,16 +1,17 @@
 ;;; personal-emacs-lisp.el --- Personal configuration for emacs lisp.
 
 ;;; Commentary:
-;;; Personal configuration for emacs lisp.
+
+;; Personal configuration for emacs lisp.
 
 ;;; Code:
 
 (require 'prelude-emacs-lisp)
 
-;;; make flycheck find the right packages
+;; make flycheck find the right packages
 (setq-default flycheck-emacs-lisp-load-path load-path)
 
-;;; disable flycheck in emacs-lisp-mode.
+;; disable flycheck in emacs-lisp-mode
 (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1)) t)
 
 (defun personal-elisp-find-thing-at-point (sym-name)

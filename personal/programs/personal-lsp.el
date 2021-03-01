@@ -1,9 +1,10 @@
 ;;; personal-lsp.el --- Personal configuration of lsp.
 
 ;;; Commentary:
-;;; Personal configuration of lsp for various languages.
-;;; Emacs client for the Language Server Protocol:
-;;;   https://github.com/emacs-lsp/lsp-mode#supported-languages
+
+;; Personal configuration of lsp for various languages.
+;; Emacs client for the Language Server Protocol:
+;;   https://github.com/emacs-lsp/lsp-mode#supported-languages
 
 ;;; Code:
 
@@ -16,7 +17,7 @@
 
       lsp-auto-guess-root t
       lsp-idle-delay 0.1
-      lsp-response-timeout 3
+      lsp-response-timeout 5
       lsp-ui-doc-enable nil
       lsp-enable-snippet t
 
@@ -36,19 +37,6 @@
 (require 'lsp-ui)
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-
-(defun personal-yasnippet-all ()
-  "Enable yasnippet for all backends."
-  (setq
-   company-backends
-   (mapcar
-    (lambda (backend)
-      (when (nlistp backend)
-        (setq backend (list backend)))
-      (unless (member 'company-yasnippet backend)
-        (setq backend (append backend '(:with company-yasnippet))))
-      backend)
-    (cl-remove-duplicates company-backends))))
 
 (provide 'personal-lsp)
 
