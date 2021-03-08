@@ -160,6 +160,13 @@
           (compile (buffer-file-name) t))
       (message "Current file does not have a shebang line."))))
 
+(defun personal-kill-compilation ()
+  "Kill current compilation."
+  (interactive)
+  (if compilation-in-progress
+      (with-current-buffer "*compilation*" (kill-compilation))
+    (message "No compilation process found.")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-comment-line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun personal-comment-line ()

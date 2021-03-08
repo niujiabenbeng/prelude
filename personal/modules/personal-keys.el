@@ -62,7 +62,7 @@
 (global-set-key (kbd "C-;")     'personal-comment-line)
 (global-set-key (kbd "M-;")     'personal-comment-line)
 (global-set-key (kbd "<f5>")    'personal-run-current-script)
-(global-set-key (kbd "C-<f5>")  'kill-compilation)
+(global-set-key (kbd "C-<f5>")  'personal-kill-compilation)
 (global-set-key (kbd "C-<tab>") 'personal-pattern-replace)
 
 ;; ctrl-return is also used in neotree-mode
