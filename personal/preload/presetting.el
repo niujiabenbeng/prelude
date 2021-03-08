@@ -25,15 +25,7 @@
 ;;; disable warnings on environment variable settings
 (setq exec-path-from-shell-check-startup-files nil)
 
-(defvar personal-start-neotree-after-init nil
+(defvar personal-start-neotree-after-init t
   "Start neotree after initialization.")
-
-(defvar personal-python-conf 'lsp
-  "Indicate which configuration python-mode use.
-Current support: `native,' `lsp'")
-
-(defvar personal-c++-conf 'lsp
-  "Indicate which configuration c++-mode use.
-Current support: `native,' `lsp', `dumb'")
 
 ;;; presetting.el ends here

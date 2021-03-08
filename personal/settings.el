@@ -34,6 +34,7 @@
 (require 'personal-helm-swoop)
 (require 'personal-dired)
 (require 'personal-modeline)
+(require 'personal-entry)
 
 ;;; Programming languages support
 (require 'personal-programming)
