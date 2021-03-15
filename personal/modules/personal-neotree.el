@@ -20,12 +20,12 @@
   "If `.neoignore' is found, return the full path, else return nil."
   (let ((filename (buffer-file-name)) dirname)
     ;; if we are in neotree buffer, use the root directory of neotree window
-    (and (eq (select-window) (neo-global--get-window))
+    (and (eq (selected-window) (neo-global--get-window))
          (file-directory-p neo-buffer--start-node)
          (setq dirname neo-buffer--start-node))
     ;; if dirname is nil, use `protjectile-project-root'
     (when (not dirname) (setq dirname (projectile-project-root)))
-    ;; if dirname is nil, search `.neoignore' through the directory
+    ;; if dirname is nil, search `.neoignore' through the path hierarchy
     (when (and filename (not dirname))
       (setq dirname (locate-dominating-file filename ".neoignore")))
     ;; if dirname is nil, use the value of `default-directory'
@@ -35,16 +35,17 @@
 (defun personal-neotree-set-hidden-regexp-list ()
   "Set `neo-hidden-regexp-list' based on ignore file."
   (setq neo-hidden-regexp-list personal-neotree-hidden-regexp-list)
-  (let* ((ignore-file (personal-neotree-get-ignore-file)))
+  (when-let ((ignore-file (personal-neotree-get-ignore-file)))
     (setq neo-hidden-regexp-list
           (with-temp-buffer
-            (insert-file-contents file)
+            (insert-file-contents ignore-file)
             (split-string (buffer-string))))))
 
 (defun personal-neotree-project-dir ()
   "Open NeoTree using the projectile root."
   (interactive)
-  (let ((path (buffer-file-name)) name)
+  (let ((window (selected-window))
+        (path (buffer-file-name)) name)
     (neotree-toggle)
     (personal-neotree-set-hidden-regexp-list)
     (when (and path (neo-global--window-exists-p))
@@ -53,7 +54,10 @@
       (neo-buffer--set-show-hidden-file-p
        (seq-filter (lambda (x) (string-match-p x name))
                    neo-hidden-regexp-list))
-      (neotree-find (file-truename path)))))
+      (neotree-find (file-truename path)))
+    ;; often when we open neotree, we only want to see directory tree.
+    ;; here we jump back to the original window.
+    (select-window window)))
 
 (defun personal-neotree-parent-root ()
   "Set parent directory as neotree root."
