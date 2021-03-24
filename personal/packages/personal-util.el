@@ -553,6 +553,9 @@ otherwise return nil."
         path name files)
     ;; collect file whose name is under cursor
     (setq path (thing-at-point 'filename t))
+    ;; if `path' itself exists, add it to the result
+    (and path (file-exists-p path)
+         (setq files (append files (expand-file-name path))))
     (when (and root path)
       (setq name (file-name-nondirectory path))
       (if (personal--jtf-filename-p name)

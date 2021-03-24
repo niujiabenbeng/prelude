@@ -24,6 +24,8 @@
                 '(:with company-yasnippet))))
     (cl-remove-duplicates company-backends))))
 
+(add-hook 'prog-mode-hook 'subword-mode)
+
 (provide 'personal-programming)
 
 ;;; personal-programming.el ends here
