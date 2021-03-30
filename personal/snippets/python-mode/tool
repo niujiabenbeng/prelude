@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# expand-env: ((yas-indent-line 'fixed))
+# name: tool
+# key: tool
+# --
+import logging
+import argparse
+
+import init
+import lib.util
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="")
+
+    parser.add_argument(
+        "--",
+        type=str,
+        required=True,
+        help="")
+
+    args = parser.parse_args()
+    lib.util.initialize_logger()
+    logging.info("Done!")
+
+
+if __name__ == "__main__":
+    main()

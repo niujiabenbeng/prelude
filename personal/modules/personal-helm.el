@@ -48,6 +48,10 @@
       (recenter-top-bottom arg))))
 (define-key helm-map (kbd "C-l") 'personal-helm-recenter-window)
 
+;; avoid tab-completion pinging random websites, see:
+;;   https://www.reddit.com/r/emacs/comments/fn85bk/tabcompletion_pinging_random_websites/
+(setq ffap-machine-p-known 'reject)
+
 (provide 'personal-helm)
 
 ;;; personal-helm.el ends here
