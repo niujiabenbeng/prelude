@@ -555,7 +555,8 @@ otherwise return nil."
     (setq path (thing-at-point 'filename t))
     ;; if `path' itself exists, add it to the result
     (and path (file-exists-p path)
-         (setq files (append files (expand-file-name path))))
+         ;; append concatenate two lists, not list and string
+         (setq files (append files (list (expand-file-name path)))))
     (when (and root path)
       (setq name (file-name-nondirectory path))
       (if (personal--jtf-filename-p name)
@@ -575,7 +576,8 @@ otherwise return nil."
         (dolist (item dexts)
           (setq item (concat name item))
           (setq files (append files (apply file-fn item root nil))))))
-    files))
+    (setq files (mapcar #'expand-file-name files))
+    (cl-remove-duplicates files :test #'string=)))
 
 (defun personal-jump-to-file-at-point (&optional other-window)
   "Jump to file specified by name under cursor."
