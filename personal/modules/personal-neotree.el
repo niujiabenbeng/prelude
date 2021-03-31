@@ -69,24 +69,29 @@
   (neotree-next-line)
   (neo-point-auto-indent))
 
-(defun personal-neotree-goto-dir (arg)
-  "Move to next dir if ARG >= 0, otherwise move to previous dir."
+(defun personal-neotree-goto-other (arg)
+  "Move to previous/next file/directory other than current one."
   (setq arg (if (< arg 0) -1 1))
-  (while (and (= (forward-line arg) 0)
-              (not (file-directory-p
-                    (neo-buffer--get-filename-current-line)))))
+  (let ((curr (neo-buffer--get-filename-current-line)) type)
+    (if (null curr)
+        (forward-line arg)
+      (setq type (file-regular-p curr))
+      (while (and curr
+                  (eq type (file-regular-p curr))
+                  (= (forward-line arg) 0))
+        (setq curr (neo-buffer--get-filename-current-line)))))
   (neo-buffer--post-move)
   (neo-point-auto-indent))
 
-(defun personal-neotree-previous-dir ()
-  "Goto the previous directory."
+(defun personal-neotree-previous-other ()
+  "Goto the previous file/directory other than current one."
   (interactive)
-  (personal-neotree-goto-dir -1))
+  (personal-neotree-goto-other -1))
 
-(defun personal-neotree-next-dir ()
-  "Goto the next directory."
+(defun personal-neotree-next-other ()
+  "Goto the next file/directory other than current one."
   (interactive)
-  (personal-neotree-goto-dir 1))
+  (personal-neotree-goto-other 1))
 
 (defun personal-neotree-open-file-left-window (full-path &optional arg)
   "Open file in window on the left side."
@@ -126,8 +131,8 @@
   (define-key map (kbd "g")       'neotree-refresh)
   (define-key map (kbd "a")       'neotree-collapse-all)
   (define-key map (kbd "h")       'neotree-hidden-file-toggle)
-  (define-key map [(ctrl up)]     'personal-neotree-previous-dir)
-  (define-key map [(ctrl down)]   'personal-neotree-next-dir)
+  (define-key map [(ctrl up)]     'personal-neotree-previous-other)
+  (define-key map [(ctrl down)]   'personal-neotree-next-other)
   (define-key map (kbd "C-c d +") 'neotree-create-node)
   (define-key map (kbd "C-c d C") 'neotree-copy-node)
   (define-key map (kbd "C-c d D") 'neotree-delete-node)
