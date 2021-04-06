@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-helm-swoop.el --- A replacement of helm-occur.
 
 ;;; Commentary:

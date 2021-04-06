@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-keys.el --- Personal key bindings.
 
 ;;; Commentary:

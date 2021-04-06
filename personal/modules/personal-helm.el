@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-helm.el --- Additional helm settings.
 
 ;;; Commentary:

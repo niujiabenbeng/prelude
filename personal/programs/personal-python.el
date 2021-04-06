@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-python.el --- Personal configuration for Python.
 
 ;;; Commentary:

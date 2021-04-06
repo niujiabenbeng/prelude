@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-lsp.el --- Personal configuration of lsp.
 
 ;;; Commentary:

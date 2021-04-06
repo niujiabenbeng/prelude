@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-neotree.el --- neotree configuration.
 
 ;;; Commentary:

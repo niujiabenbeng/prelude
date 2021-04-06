@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-programming.el --- general settings of programming languages.
 
 ;;; Commentary:

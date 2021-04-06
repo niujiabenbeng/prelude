@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-isearch.el --- Personal isearch settings.
 
 ;;; Commentary:
@@ -24,10 +25,6 @@
   (define-key map (kbd "C-S-<left>") 'personal-isearch-del-word)
   (define-key map (kbd "C-S-<right>") 'isearch-yank-word))
 
-;; make isearch & lazy-highlight have the same background
-;; (set-face-attribute 'isearch nil        :background "#595959")
-;; (set-face-attribute 'lazy-highlight nil :background "#595959")
-
 ;; adopt prucell isearch & lazy-highlight color
 (set-face-attribute 'isearch nil        :background "#D7D75F")
 (set-face-attribute 'isearch nil        :foreground "#000000")
@@ -35,7 +32,7 @@
 (set-face-attribute 'lazy-highlight nil :foreground "#000000")
 
 ;; borrowerd from following snippet and modified a bit:
-;; https://stackoverflow.com/questions/202803/searching-for-marked-selected-text-in-emacs
+;;   https://stackoverflow.com/questions/202803/searching-for-marked-selected-text-in-emacs
 (defun personal-isearch-with-region ()
   "Isearch on selected text."
   (when (region-active-p)

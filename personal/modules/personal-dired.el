@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-dired.el --- dired configuration.
 
 ;;; Commentary:
@@ -19,7 +20,7 @@
    (list (read-file-name "Create dir-or-file: " (dired-current-directory))))
   (if (file-exists-p dir-or-file)
       (message "File already exists: %s" dir-or-file)
-    (if ((string-suffix-p "/" dir-or-file))
+    (if (string-suffix-p "/" dir-or-file)
         (dired-create-directory dir-or-file)
       (let ((dirname (file-name-directory dir-or-file)))
         (unless (file-exists-p dirname)

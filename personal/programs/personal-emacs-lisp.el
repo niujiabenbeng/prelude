@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-emacs-lisp.el --- Personal configuration for emacs lisp.
 
 ;;; Commentary:

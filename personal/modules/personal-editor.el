@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-editor.el --- Enhancement of prelude editor.
 
 ;;; Commentary:

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-shell.el --- Personal configuration for shell script.
 
 ;;; Commentary:

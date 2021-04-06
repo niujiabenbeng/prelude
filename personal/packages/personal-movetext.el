@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-movetext.el --- Move text functionality for Prelude Emacs.
 
 ;;; Commentary:

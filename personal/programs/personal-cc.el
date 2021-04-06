@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-cc.el --- Personal configuration for C/C++.
 
 ;;; Commentary:

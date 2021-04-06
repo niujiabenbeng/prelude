@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-putty-keys.el --- Key mappings for putty.
 
 ;;; Commentary:

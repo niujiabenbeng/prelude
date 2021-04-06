@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; presetting.el --- Entry point of personal settings before prelude.
 
 ;;; Commentary:

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-modeline.el --- Additional modeline configuration.
 
 ;;; Commentary:

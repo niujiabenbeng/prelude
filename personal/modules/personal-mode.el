@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-mode.el --- personal configuration: minor mode
 
 ;;; Commentary:

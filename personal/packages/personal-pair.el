@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-pair.el --- Pair manipulation.
 
 ;;; Commentary:

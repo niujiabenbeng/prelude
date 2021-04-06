@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; personal-windows.el --- Utility for window configuration.
 
 ;;; Commentary:
