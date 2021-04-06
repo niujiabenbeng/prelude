@@ -46,6 +46,7 @@
 (require 'lsp-ui)
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+
 (let ((map lsp-ui-mode-map))
   (define-key map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
   (define-key map [remap xref-find-references] #'lsp-ui-peek-find-references))
