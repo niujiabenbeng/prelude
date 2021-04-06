@@ -396,15 +396,15 @@ otherwise return nil."
 (defvar personal--fcf-emacs-configurations
   '("settings.el"
     "preload/presetting.el"
-    "programs/personal-cc-lsp.el"
     "programs/personal-cc.el"
     "programs/personal-emacs-lisp.el"
     "programs/personal-lsp.el"
     "programs/personal-programming.el"
-    "programs/personal-python-lsp.el"
     "programs/personal-python.el"
     "programs/personal-shell.el"
+    "programs/personal-shell.el"
     "modules/personal-editor.el"
+    "modules/personal-entry.el"
     "modules/personal-helm-swoop.el"
     "modules/personal-helm.el"
     "modules/personal-isearch.el"
@@ -487,7 +487,10 @@ otherwise return nil."
   (interactive)
   (let ((root (projectile-project-root))
         (names '("recentf" "test" "emacs" "shell")))
-    (if root (push "project" names))
+    ;; `project' is not added into the sources if we already in emacs.d.
+    (and root
+         (not (string= root prelude-dir))
+         (push "project" names))
     (personal--fcf-context-put 'names names)
     (personal--fcf-context-put 'actives names))
 
