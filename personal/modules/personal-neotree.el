@@ -118,7 +118,7 @@
 
 (setq neo-theme 'ascii)
 (setq neo-smart-open t)
-(setq neo-window-width 24)
+(setq neo-window-width 32)
 (setq neo-window-fixed-size nil)
 (setq neo-show-updir-line nil)
 (setq neo-auto-indent-point t)
