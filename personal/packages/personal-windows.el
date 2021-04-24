@@ -21,7 +21,7 @@ No horizontal window exists."
         left right)
     ;; make current window at the top side
     (while (not (window-at-side-p cur 'top))
-      (delete-window (windmove-find-other-window 'up)))
+      (delete-window (window-in-direction 'above)))
     ;; delete all live windows not at the top side
     (let (win-to-del)
       (walk-window-tree
@@ -37,18 +37,18 @@ No horizontal window exists."
     (when neo (windmove-right))
     (setq left (selected-window))
     (select-window
-     (or (windmove-find-other-window 'right)
+     (or (window-in-direction 'right)
          (split-window-right)))
     (setq right (selected-window))
     ;; remove redundant horizontal windows
-    (let ((rest (windmove-find-other-window 'right)))
+    (let ((rest (window-in-direction 'right)))
       (while rest
         (if (eq cur right)
             (delete-window rest)
           (delete-window right)
           (select-window rest)
           (setq right rest))
-        (setq rest (windmove-find-other-window 'right))))
+        (setq rest (window-in-direction 'right))))
     (balance-windows)
     (select-window cur)
     (list :cur cur :neo neo :left left :right right)))

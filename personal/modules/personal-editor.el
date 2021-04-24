@@ -82,6 +82,9 @@
 (ad-deactivate #'yank)
 (ad-deactivate #'yank-pop)
 
+;; move window in a loop manner
+(setq windmove-wrap-around t)
+
 (provide 'personal-editor)
 
 ;;; personal-editor.el ends here

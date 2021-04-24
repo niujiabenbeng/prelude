@@ -23,7 +23,7 @@
 (defun personal-swap-windows ()
   "Swap windows occurding to current window position."
   (interactive)
-  (if (windmove-find-other-window 'right)
+  (if (window-in-direction 'right)
       (crux-transpose-windows 1)
     (crux-transpose-windows -1)))
 

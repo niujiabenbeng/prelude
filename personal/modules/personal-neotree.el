@@ -132,6 +132,7 @@
   (define-key map (kbd "g")       'neotree-refresh)
   (define-key map (kbd "a")       'neotree-collapse-all)
   (define-key map (kbd "h")       'neotree-hidden-file-toggle)
+  (define-key map (kbd "^")       'personal-neotree-parent-root)
   (define-key map [(ctrl up)]     'personal-neotree-previous-other)
   (define-key map [(ctrl down)]   'personal-neotree-next-other)
   (define-key map (kbd "C-c d +") 'neotree-create-node)
