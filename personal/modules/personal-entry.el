@@ -24,11 +24,10 @@
     (find-file name)
     (read-only-mode read-only))
   (when personal-start-neotree-after-init
-    (emacs-client-toggle-neotree)))
-
-;; start neotree after initialization.
-(when personal-start-neotree-after-init
-  (add-hook 'emacs-startup-hook 'emacs-client-toggle-neotree t))
+    (emacs-client-toggle-neotree)
+    ;; when neotree is activated immediately after emacs is started,
+    ;; a display problem may occur, so we redraw display 0.1s later.
+    (run-with-timer 0.1 nil 'redraw-display)))
 
 (provide 'personal-entry)
 
