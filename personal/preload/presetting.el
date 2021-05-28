@@ -27,7 +27,7 @@
 ;; disable warnings on environment variable settings
 (setq exec-path-from-shell-check-startup-files nil)
 
-(defvar personal-start-neotree-after-init nil
+(defvar personal-start-neotree-after-init t
   "Start neotree after initialization.")
 
 ;;; presetting.el ends here

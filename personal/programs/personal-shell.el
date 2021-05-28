@@ -8,7 +8,6 @@
 ;;; Code:
 
 (require 'comint)
-(require 'prelude-shell)
 
 ;; prevent shell echoing
 (defun my-comint-init ()
@@ -17,6 +16,7 @@
 (add-hook 'shell-mode-hook #'turn-off-auto-fill)
 
 ;; always indent 4 spaces after continuation
+(setq sh-basic-offset 4)
 (setq sh-indent-after-continuation 'always)
 
 ;; sh-mode imenu支持变量

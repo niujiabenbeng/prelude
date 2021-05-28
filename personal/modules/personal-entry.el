@@ -20,14 +20,15 @@
 
 (defun emacs-client-init-find-file (file-name read-only)
   "Visit file by emacs client."
-  (find-file file-name)
-  (read-only-mode read-only)
+  (when-let ((name (or file-name (car recentf-list))))
+    (find-file name)
+    (read-only-mode read-only))
   (when personal-start-neotree-after-init
     (emacs-client-toggle-neotree)))
 
 ;; start neotree after initialization.
 (when personal-start-neotree-after-init
-  (add-hook 'window-setup-hook 'emacs-client-toggle-neotree t))
+  (add-hook 'emacs-startup-hook 'emacs-client-toggle-neotree t))
 
 (provide 'personal-entry)
 
