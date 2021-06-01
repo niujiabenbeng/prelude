@@ -59,7 +59,7 @@
   (set-face-background 'whitespace-empty color))
 
 ;; bring back some colors previously disabled by zenburn
-;; (set-face-background 'hl-line "#505050")
+(set-face-background 'hl-line "#505050")
 (set-face-background 'vhl/default-face "black")
 (set-face-foreground 'anzu-replace-to "red")
 (set-face-background 'rectangle-preview "black")

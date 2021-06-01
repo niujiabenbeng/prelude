@@ -146,6 +146,8 @@
    "Command <indent-region> to indent region or buffer."
    "Use <re-builder> to interactively search for regexp."))
 
+(setq prelude-tips (append prelude-tips key-chord-tips))
+
 (provide 'personal-keys)
 
 ;;; personal-keys.el ends here
