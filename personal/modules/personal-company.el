@@ -27,10 +27,16 @@
 (global-company-mode 1)
 (company-quickhelp-mode 1)
 
+(defun personal-company-other-backend ()
+  (interactive)
+  (if (looking-back "[-_/.0-9a-zA-Z]" (1- (point)))
+      (company-other-backend)
+    (message "No indicator for completion.")))
+
 ;; borrowed from prucell emacs `lisp/init-company.el'
 (define-key company-mode-map [remap completion-at-point] 'company-complete)
 (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)
-(define-key company-mode-map (kbd "M-/") 'company-other-backend)
+(define-key company-mode-map (kbd "M-/") 'personal-company-other-backend)
 
 (provide 'personal-company)
 

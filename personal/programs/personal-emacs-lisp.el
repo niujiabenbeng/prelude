@@ -35,8 +35,8 @@
   (define-key map (kbd "C-M-,") 'personal-elisp-pop-marker-stack))
 
 (defvar personal--elisp-company-backends
-  '((company-abbrev company-dabbrev company-dabbrev-code)
-    company-capf company-files)
+  '((company-files company-keywords company-capf company-yasnippet)
+    (company-abbrev company-dabbrev company-dabbrev-code))
   "Company backends for emacs lisp.")
 
 (add-hook

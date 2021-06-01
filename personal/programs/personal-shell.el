@@ -26,10 +26,9 @@
                 (nthcdr 1 (car sh-imenu-generic-expression)))))
 (add-hook 'sh-mode-hook 'my-shell-mode-setup-imenu)
 
-;; In sh-script mode, backend `company-capf' can generate path candidates,
-;; so we discard `campany-files' here.
 (defvar personal--sh-company-backends
-  '((company-abbrev company-dabbrev company-dabbrev-code) company-capf)
+  '((company-abbrev company-dabbrev company-dabbrev-code)
+    (company-files company-keywords company-capf company-yasnippet))
   "Company backends for shell script.")
 
 ;; set company backends
