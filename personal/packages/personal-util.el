@@ -105,7 +105,7 @@
       (insert (format "%s;;; %s --- \n\n" head name))
       (insert ";;; Commentary:\n\n;;\n\n;;;Code:\n\n")
       (goto-char (point-max))
-      (insert (format "\n(provide '%s)\n" name))
+      (insert (format "\n(provide '%s)\n" (file-name-base name)))
       (insert (format "\n;;; %s ends here\n" name))
       (goto-line 2)
       (end-of-line))))

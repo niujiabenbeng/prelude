@@ -16,15 +16,14 @@
 ;;; Load prelude modules
 (require 'prelude-helm)
 (require 'prelude-helm-everywhere)
-(require 'prelude-company)
 (require 'prelude-key-chord)
 (require 'prelude-org)
-(require 'prelude-emacs-lisp)
 (require 'prelude-xml)
 (require 'prelude-yaml)
 
 ;;; Load personal configurations.
 (require 'personal-putty-keys)
+(require 'personal-company)
 (require 'personal-mode)
 (require 'personal-keys)
 (require 'personal-editor)
