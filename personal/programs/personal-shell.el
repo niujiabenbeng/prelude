@@ -26,15 +26,11 @@
                 (nthcdr 1 (car sh-imenu-generic-expression)))))
 (add-hook 'sh-mode-hook 'my-shell-mode-setup-imenu)
 
-(defvar personal--sh-company-backends
-  '((company-abbrev company-dabbrev company-dabbrev-code)
-    (company-files company-keywords company-capf company-yasnippet))
-  "Company backends for shell script.")
-
 ;; set company backends
-(add-hook
+(personal-set-company-backends
  'sh-mode-hook
- (lambda () (personal-set-company-backends personal--sh-company-backends)))
+ '((company-abbrev company-dabbrev company-dabbrev-code)
+    (company-files company-keywords company-capf company-yasnippet)))
 
 (provide 'personal-shell)
 

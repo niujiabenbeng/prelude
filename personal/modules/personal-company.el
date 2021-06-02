@@ -11,7 +11,6 @@
 ;;;Code:
 
 (prelude-require-packages '(company company-quickhelp))
-
 (require 'company)
 (require 'company-quickhelp)
 
@@ -27,24 +26,31 @@
 (global-company-mode 1)
 (company-quickhelp-mode 1)
 
-(defvar-local personal-company-backends
-  '((company-files company-keywords company-capf company-yasnippet)
-    (company-abbrev company-dabbrev company-dabbrev-code))
-  "All backends used by company-mode.")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; backend settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar-local personal-company-backend
-  (car personal-company-backends)
-  "Backend in use currently.")
+(defvar-local personal-company-backends nil "All backends")
 
-(defun personal-set-company-backends (backends)
+(defvar-local personal-company-backend nil "Backend in use")
+
+(defun personal-get-company-backends (major-backend)
+  `((,major-backend company-files company-keywords company-yasnippet)
+    (company-abbrev company-dabbrev company-dabbrev-code)))
+
+(defun personal-set-company-backends (hook backends)
   "Set company backends to file local variables."
-  (setq-local personal-company-backends backends)
-  (setq-local personal-company-backend (car personal-company-backends))
-  (setq-local company-backends (list personal-company-backend)))
+  (add-hook hook
+            (lambda ()
+              (setq-local personal-company-backends backends)
+              (setq-local personal-company-backend (car backends))
+              (setq-local company-backends (list personal-company-backend)))))
 
 (defun personal-company-other-backend ()
   "Set company backend to next one and regenerate candidates."
   (interactive)
+  (unless (looking-back "[-_/.0-9a-zA-Z]")
+    (user-error "Cannot complete without prefix."))
+  (when (looking-at-p "[-_/.0-9a-zA-Z]")
+    (user-error "Cannot complete in the middle of a word."))
   (if-let* ((all  personal-company-backends)
             (curr personal-company-backend)
             (next (cadr (member curr all))))
@@ -54,9 +60,14 @@
   ;; copy from: `company-other-backend'
   (company-cancel)
   (company-begin-backend personal-company-backend)
-  (unless company-candidates (user-error "No other backend")))
+  (unless company-candidates
+    (user-error "No candidate found by backend: %s" personal-company-backend)))
 
+;; set default values
+(setq-default personal-company-backends (personal-get-company-backends 'company-capf))
+(setq-default personal-company-backend (car personal-company-backends))
 (setq-default company-backends (list personal-company-backend))
+
 ;; borrowed from prucell emacs `lisp/init-company.el'
 (define-key company-mode-map [remap completion-at-point] 'company-complete)
 (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)
