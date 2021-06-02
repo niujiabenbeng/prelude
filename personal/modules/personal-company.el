@@ -27,12 +27,36 @@
 (global-company-mode 1)
 (company-quickhelp-mode 1)
 
-(defun personal-company-other-backend ()
-  (interactive)
-  (if (looking-back "[-_/.0-9a-zA-Z]" (1- (point)))
-      (company-other-backend)
-    (message "No indicator for completion.")))
+(defvar-local personal-company-backends
+  '((company-files company-keywords company-capf company-yasnippet)
+    (company-abbrev company-dabbrev company-dabbrev-code))
+  "All backends used by company-mode.")
 
+(defvar-local personal-company-backend
+  (car personal-company-backends)
+  "Backend in use currently.")
+
+(defun personal-set-company-backends (backends)
+  "Set company backends to file local variables."
+  (setq-local personal-company-backends backends)
+  (setq-local personal-company-backend (car personal-company-backends))
+  (setq-local company-backends (list personal-company-backend)))
+
+(defun personal-company-other-backend ()
+  "Set company backend to next one and regenerate candidates."
+  (interactive)
+  (if-let* ((all  personal-company-backends)
+            (curr personal-company-backend)
+            (next (cadr (member curr all))))
+      (setq-local personal-company-backend next)
+    (setq-local personal-company-backend (car all)))
+  (setq-local company-backends (list personal-company-backend))
+  ;; copy from: `company-other-backend'
+  (company-cancel)
+  (company-begin-backend personal-company-backend)
+  (unless company-candidates (user-error "No other backend")))
+
+(setq-default company-backends (list personal-company-backend))
 ;; borrowed from prucell emacs `lisp/init-company.el'
 (define-key company-mode-map [remap completion-at-point] 'company-complete)
 (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)

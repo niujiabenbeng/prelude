@@ -34,15 +34,6 @@
   (define-key map (kbd "C-M-.") 'personal-elisp-find-thing-at-point)
   (define-key map (kbd "C-M-,") 'personal-elisp-pop-marker-stack))
 
-(defvar personal--elisp-company-backends
-  '((company-files company-keywords company-capf company-yasnippet)
-    (company-abbrev company-dabbrev company-dabbrev-code))
-  "Company backends for emacs lisp.")
-
-(add-hook
- 'emacs-lisp-mode-hook
- (lambda () (setq-local company-backends personal--elisp-company-backends)))
-
 (provide 'personal-emacs-lisp)
 
 ;;; personal-emacs-lisp.el ends here

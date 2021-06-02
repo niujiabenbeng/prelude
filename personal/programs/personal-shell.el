@@ -34,7 +34,7 @@
 ;; set company backends
 (add-hook
  'sh-mode-hook
- (lambda () (setq-local company-backends personal--sh-company-backends)))
+ (lambda () (personal-set-company-backends personal--sh-company-backends)))
 
 (provide 'personal-shell)
 
