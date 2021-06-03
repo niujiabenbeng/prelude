@@ -7,7 +7,9 @@
 
 ;;;Code:
 
+(prelude-require-package 'psession)
 (require 'neotree)
+(require 'psession)
 (require 'personal-neotree)
 
 (defun emacs-client-toggle-neotree ()
@@ -20,14 +22,30 @@
 
 (defun emacs-client-init-find-file (file-name read-only)
   "Visit file by emacs client."
-  (when-let ((name (or file-name (car recentf-list))))
-    (find-file name)
-    (read-only-mode read-only))
+  (find-file file-name)
+  (read-only-mode read-only)
   (when personal-start-neotree-after-init
     (emacs-client-toggle-neotree)
     ;; when neotree is activated immediately after emacs is started,
-    ;; a display problem may occur, so we redraw display 0.1s later.
-    (run-with-timer 0.1 nil 'redraw-display)))
+    ;; a display problem may occur, so we redraw display 0.5s later.
+    (run-with-timer 0.5 nil 'redraw-display)))
+
+(defun emacs-client-save-session (session)
+  "Save emacs client session."
+  (unless (file-directory-p psession-elisp-objects-default-directory)
+    (make-directory psession-elisp-objects-default-directory t))
+  (psession-save-last-winconf)
+  (psession--dump-some-buffers-to-list)
+  (psession--dump-object-to-file-save-alist))
+
+(defun emacs-client-load-session (session)
+  "Restore last emacs client session."
+  (psession-restore-last-winconf)
+  (psession--restore-some-buffers)
+  (psession--restore-objects-from-directory))
+
+(add-to-list 'delete-frame-functions #'emacs-client-save-session)
+;; (add-to-list 'after-make-frame-functions #'emacs-client-load-session)
 
 (provide 'personal-entry)
 
