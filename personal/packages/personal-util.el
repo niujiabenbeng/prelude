@@ -13,6 +13,14 @@
 (require 'subr-x)
 (require 'compile)
 
+(defun personal-search-all (regexp string)
+  "Collect all pieces of text in STRING which match REGEXP."
+  (let (parts)
+    (while (string-match regexp string)
+      (setq parts (cons (match-string 0 string) parts))
+      (setq string (substring string (match-end 0))))
+    (reverse parts)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-pattern-replace ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun personal-cutting-line-p ()

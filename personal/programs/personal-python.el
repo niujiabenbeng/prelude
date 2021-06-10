@@ -62,7 +62,6 @@ spec.loader.exec_module(foo)
   (lsp-deferred))
 
 (add-hook 'python-mode-hook #'personal-python-lsp-setup)
-(add-hook 'python-mode-hook #'personal-yasnippet-all)
 
 (provide 'personal-python)
 

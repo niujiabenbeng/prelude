@@ -31,6 +31,9 @@
 (set-face-attribute 'lazy-highlight nil :background "#5FAFAF")
 (set-face-attribute 'lazy-highlight nil :foreground "#000000")
 
+;; make search respect cases
+(setq-default case-fold-search nil)
+
 ;; borrowerd from following snippet and modified a bit:
 ;;   https://stackoverflow.com/questions/202803/searching-for-marked-selected-text-in-emacs
 (defun personal-isearch-with-region ()

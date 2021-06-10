@@ -84,7 +84,7 @@
 
 ;; show available keybindings after you start typing
 (require 'which-key)
-(setq which-key-idle-delay 0.1)
+(setq which-key-idle-delay 0.5)
 (which-key-mode +1)
 
 (provide 'prelude-ui)
