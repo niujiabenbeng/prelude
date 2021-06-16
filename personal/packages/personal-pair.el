@@ -12,16 +12,16 @@
 (defun personal-get-enclosing-sexp ()
   "like `sp-get-enclosing-sexp', but also deal with boundaries."
   (cond
-   ;; first choise: use the result of `show-smartparens-mode'
+   ;; first choice: use the result of `show-smartparens-mode'
    ((and sp-show-pair-previous-point
          sp-show-pair-previous-match-positions
          (= sp-show-pair-previous-point (point)))
     (-interleave '(:beg :end :op-l :cl-l) sp-show-pair-previous-match-positions))
-   ;; second choise: look backward and search for closing delimiter
+   ;; second choice: look backward and search for closing delimiter
    ((sp--looking-back-p (sp--get-closing-regexp sp-pair-list)) (sp-get-sexp t))
-   ;; third choise: look forward and search for opening delimiter
+   ;; third choice: look forward and search for opening delimiter
    ((sp--looking-at-p (sp--get-opening-regexp sp-pair-list)) (sp-get-sexp))
-   ;; last choise: return enclosing expression
+   ;; last choice: return enclosing expression
    (t (sp-get-enclosing-sexp))))
 
 (defun personal-goto-pair ()
