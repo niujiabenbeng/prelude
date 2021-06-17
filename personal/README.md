@@ -324,28 +324,11 @@ future work:
 2. lsp-mode和cquery
 
 
-## etags, ctags, gtags, cscope
-
-* Etags is a command to generate 'TAGS' file which is the tag file for Emacs.
-* Ctags is a command to generate 'tags' file which is the tag file for vi, now
-  also for emacs.
-* Gtags is a command to generate tag files independent from any editor.
-* Cscope is an all-in-one source code browsing tool for C language.
-
-emacs本身不需要etags, 因为有xref, 可以直接从emacs解释器里拿数据.
-其他语言则需要生成tags文件.
-
-source: [what's the difference between etags, ctags, gtags, and
-cscope](https://stackoverflow.com/questions/12922526/tags-for-emacs-relationship-between-etags-ebrowse-cscope-gnu-global-and-exub)
-
-
 ## python配置
 
-python环境需要配置环境变量`PYTHONENV`
+#### python-lsp
 
-## python-lsp配置
-
-目前用的python language server为python-lsp-server.
+python配置用python-lsp, 目前用的python language server为python-lsp-server.
 
 python-lsp-server支持的插件如下:
 
@@ -383,3 +366,10 @@ python-lsp-server支持的插件如下:
 1. 跳转和补全用jedi.
 2. linter用flake8或pylint, 选pylint, 因为pylint可定制化更好.
 3. auto-formatter用autopep8或者yapf. 选yapf, 因为yapf可定制化更好.
+
+#### pylintrc
+
+pylint的配置文件为:pylintrc. 如果python文件不在module中, 则pylint不会在其父目录
+寻找pylintrc, 这里我们通过修改pylint的源码来确保pylint能找到对应的配置文件.
+源码位于: `/pylint/config/find_default_config_files.py`
+在`find_default_config_files`函数中, 去掉对`__init__.py`的限制即可.

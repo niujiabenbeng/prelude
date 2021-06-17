@@ -10,6 +10,9 @@
 (require 'python)
 (require 'personal-lsp)
 
+;; jedi to completion & jumping
+;; yapf to auto formatting
+;; pylint to linting
 (setq lsp-pylsp-plugins-mccabe-enabled nil)
 (setq lsp-pylsp-plugins-pycodestyle-enabled nil)
 (setq lsp-pylsp-plugins-pydocstyle-enabled nil)
@@ -17,7 +20,7 @@
 (setq lsp-pylsp-plugins-autopep8-enabled nil)
 (setq lsp-pylsp-plugins-flake8-enabled nil)
 (setq lsp-pylsp-plugins-yapf-enabled t)
-(setq lsp-pyls-plugins-pylint-enabled t)
+(setq lsp-pylsp-plugins-pylint-enabled t)
 (add-hook 'python-mode-hook #'lsp-deferred)
 
 (provide 'personal-python)
