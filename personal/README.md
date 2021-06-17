@@ -345,13 +345,15 @@ python环境需要配置环境变量`PYTHONENV`
 
 ## python-lsp配置
 
-目前python-lsp支持的插件如下:
+目前用的python language server为python-lsp-server.
+
+python-lsp-server支持的插件如下:
 
 1. jedi (enabled): 补全和跳转. 重要的基础功能.
-2. mccabe (disabled): 检查程序圈复杂度.
+2. mccabe (enabled): 检查程序圈复杂度.
 3. pylint (disabled): 检查程序的错误和风格.
 4. pycodestyle (disabled): 检查程序的风格.
-5. pydocstyle (disabled): 检查文档的风格.
+5. pydocstyle (enabled): 检查文档的风格.
 6. pyflakes (disabled): 检查程序的错误.
 7. flake8 (enabled): pycodestyle, pyflakes, mccabe的组合.
 8. autopep8 (disabled): 自动排版工具, 依赖pycodestyle.
@@ -378,8 +380,6 @@ python环境需要配置环境变量`PYTHONENV`
 
 选择:
 
-1. 补全用jedi.
-2. linter用flake8或pylint, 选pylint. 个人倾向于选flake8, 因为flake8较轻量, 且
-   pytorch项目用的是flake8. 但是目前的pyls配置似乎默认pylint是开启的, 也关不掉,
-   只好选pylint.
-3. auto-formatter用autopep8或者yapf. 选yapf. 原因: autopep8似乎较老.
+1. 跳转和补全用jedi.
+2. linter用flake8或pylint, 选pylint, 因为pylint可定制化更好.
+3. auto-formatter用autopep8或者yapf. 选yapf, 因为yapf可定制化更好.
