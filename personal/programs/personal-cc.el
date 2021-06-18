@@ -5,6 +5,9 @@
 
 ;; Personal configuration for C/C++.
 
+;; Use clangd as c++ language server. The binary files can be found in
+;;          https://releases.llvm.org/download.html
+
 ;;; Code:
 
 (prelude-require-package 'google-c-style)
@@ -27,26 +30,18 @@
 (add-hook 'c-mode-common-hook 'google-set-c-style t)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent t)
 
-(defun personal-cc-lsp-setup ()
-  "Set C++ environment based on `CLNAGDEXEC'."
-  (setq lsp-clients-clangd-executable
-        (or (getenv "CLANGDEXEC")
-            (executable-find "clangd")
-            (error "clangd not found.")))
-  ;; clangd提供了自动插入头文件的选项, 但是我习惯将经常使用的头文件放入一
-  ;; 个文件common.h中, 其他文件只需要include "common.h"即可. 所以这里设置
-  ;; `-header-insertion=never'
-  (setq lsp-clients-clangd-args
-        '("-background-index" "-log=error" "-clang-tidy"
-          "-fallback-style=Google" "-header-insertion=never"
-          "-completion-style=detailed"))
-  ;; 通过检查有没有clangd要求的配置文件来确定是否开启lsp
-  (when-let ((file (buffer-file-name)))
-    (when (or (locate-dominating-file file "compile_commands.json")
-              (locate-dominating-file file "compile_flags.txt"))
-      (lsp-deferred))))
-
-(add-hook 'c-mode-common-hook #'personal-cc-lsp-setup)
+;; lsp mode configuration, see `clangd --help' for detailed information
+(setq lsp-clients-clangd-args
+      '("--all-scopes-completion"
+        "--background-index"
+        "--clang-tidy"
+        "--completion-style=detailed"
+        "--cross-file-rename"
+        "--fallback-style=Google"
+        "--header-insertion=never"
+        "--pch-storage=memory"  ; 机器内存较大的时候使用
+        "--log=error"))
+(add-hook 'c-mode-common-hook #'lsp-deferred)
 
 (defun personal-cc-change-name-style ()
   "Change the style of name in c++ program."

@@ -4,15 +4,20 @@
 ;;; Commentary:
 
 ;; Personal configuration for Python.
+;;
+;; install python language server:
+;;   `pip install 'python-lsp-server[all]'`
+;;
+;; we choose the following tools:
+;;   1. jedi for completion & jumping
+;;   2. yapf for auto formatting
+;;   3. pylint for linting
 
 ;;; Code:
 
 (require 'python)
 (require 'personal-lsp)
 
-;; jedi to completion & jumping
-;; yapf to auto formatting
-;; pylint to linting
 (setq lsp-pylsp-plugins-mccabe-enabled nil)
 (setq lsp-pylsp-plugins-pycodestyle-enabled nil)
 (setq lsp-pylsp-plugins-pydocstyle-enabled nil)
