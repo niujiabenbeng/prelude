@@ -57,11 +57,11 @@
       (setq-local personal-company-backend next)
     (setq-local personal-company-backend (car all)))
   (setq-local company-backends (list personal-company-backend))
+  ;; the message is not shown in minibuffer, i don't know why
+  (message "current company backend: %s", personal-company-backend)
   ;; copy from: `company-other-backend'
   (company-cancel)
-  (company-begin-backend personal-company-backend)
-  (unless company-candidates
-    (user-error "No candidate found by backend: %s" personal-company-backend)))
+  (company-begin-backend personal-company-backend))
 
 ;; set default values
 (setq-default personal-company-backends (personal-get-company-backends 'company-capf))

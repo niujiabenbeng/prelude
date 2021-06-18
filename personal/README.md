@@ -227,101 +227,13 @@ neotree绑定键
 * C-ret: personal-neotree-open-file-other-window, 在右侧窗口打开文件
 
 
-## c++相关
+## c++配置
 
-c++包括自动排版, 跳转和补全. 这三者的依赖库安装脚本如下:
+#### cpp-lsp
 
-``` shell
-# 依赖库列表:
-# global, clang, clangd, clang-format
+c++配置lsp-clangd, 目前用的c++ language server为clangd.
 
-# global 6.6.4 源码安装
-wget http://tamacom.com/global/global-6.6.4.tar.gz
-tar zxvf global-6.6.4.tar.gz && cd global-6.6.4
-./configure --prefix=${HOME}/Documents/tools/global
-make -j4 && make install
-
-# clang 10.0 源码安装
-wget https://github.com/llvm/llvm-project/archive/llvmorg-10.0.0.tar.gz
-mkdir build && cd build
-cmake -G "Unix Makefiles" \
-      -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;libcxx;libcxxabi;libunwind;lldb;compiler-rt;lld;polly" \
-      -DCMAKE_INSTALL_PREFIX=${HOME}/Documents/tools/clang \
-      -DCMAKE_BUILD_TYPE=Release \
-      ../llvm
-make -j32 && make install
-```
-
-注意: 如果是从源码安装, 则需要配置相应的环境变量:
-
-``` shell
-TOOLS=${HOME}/Documents/tools
-export PATH=${TOOLS}/clang/bin:$PATH
-export LD_LIBRARY_PATH=${TOOLS}/clang/lib:$LD_LIBRARY_PATH
-```
-
-#### basic navigation
-
-| key   | function                                          |
-|:-----:|:--------------------------------------------------|
-| C-M-f | `personal-forward-pair`: 跳转到下一个pair.        |
-| C-M-b | `personal-backward-pair`: 跳转到上一个pair.       |
-| C-M-p | `personal-goto-pair`: 在跳转到pair的开头或结尾.   |
-| C-M-@ | `personal-mark-pair`: 选中被pair包围的区域.       |
-| C-M-w | `personal-copy-pair`: 复制被pair包围的区域.       |
-| C-M-k | `personal-kill-pair`: 剪切被pair包围的区域.       |
-| C-M-a | `beginning-of-defun`: 跳转到函数的开头.           |
-| C-M-e | `end-of-defun`: 跳转到函数的结尾.                 |
-| C-M-h | `mark-defun`: 选中整个函数.                       |
-
-#### 自动排版
-
-自动排版用`clang-format`, 当根目录有`.clang-format`文件时, 会开启自动排版功能,
-否则会用emacs自带的排版功能.
-
-`.clang-format`样本位于: `personal/docs/conf.v6.0.clang-format`.
-
-自动排版触发条件:
-
-1. 键入";"和"}"时, 会对当前函数进行排版;
-2. 快捷键"C-M-\", 对选中区域进行排版;
-
-#### 跳转
-
-跳转用`helm-gtags`. 在根目录存在`GTAGS`文件时, `helm-gtags-mode`默认开启, 如下的命
-令才可用; 否则, 需要手动开启`helm-gtags-mode`: `M-x helm-gtags-mode`.
-
-* M-.: helm-gtags-dwim
-* M-,: helm-gtags-pop-stack
-* C-c g o: helm-gtags-show-stack
-* C-c g c: helm-gtags-create-tags
-* C-c g u: helm-gtags-update-tags
-* C-c g a: helm-gtags-tags-in-this-function
-* C-c g <left>: helm-gtags-previous-history
-* C-c g <right>: helm-gtags-next-history
-
-其中, `helm-gtags-dwim` 做如下事情:
-
-1. If the tag at point is a definition, jumps to a reference;
-2. If the tag at point is a reference, jumps to tag definition;
-3. If the tag at point is an include header, it jumps to that header.
-
-#### 补全
-
-补全后端用`irony-mode`, 前端用`company-irony`, 头文件补全用
-`company-irony-c-headers`.
-
-需要在根目录放置文件`.clang_complete`, 以指明头文件路径.
-
-参考:
-
-1. [clang-format](https://github.com/sonatard/clang-format)
-2. [helm-gtags](https://github.com/emacsorphanage/helm-gtags)
-
-future work:
-
-1. c++-mode中的flycheck
-2. lsp-mode和cquery
+clangd的二进制文件下载: https://releases.llvm.org/download.html
 
 
 ## python配置

@@ -47,9 +47,21 @@
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
+(defun personal-lsp-find-definitions-other-window ()
+  "Find definitions and show in other window."
+  (interactive)
+  (personal-display-result-other-window (lsp-ui-peek-find-definitions)))
+
+(defun personal-lsp-pop-marker-stack ()
+  "Show previous marker position in other window."
+  (interactive)
+  (personal-display-result-other-window (xref-pop-marker-stack)))
+
 (let ((map lsp-ui-mode-map))
   (define-key map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key map [remap xref-find-references] #'lsp-ui-peek-find-references))
+  (define-key map [remap xref-find-references]  #'lsp-ui-peek-find-references)
+  (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack)
+  (define-key map (kbd "C-M-.") #'personal-lsp-find-definitions-other-window))
 
 (provide 'personal-lsp)
 
