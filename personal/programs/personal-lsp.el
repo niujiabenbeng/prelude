@@ -36,7 +36,10 @@
 (setq lsp-ui-doc-max-height 8
       lsp-ui-doc-max-width 35
       lsp-ui-sideline-ignore-duplicate t
+      lsp-ui-peek-enable t
+      lsp-ui-imenu-enable t
       lsp-ui-doc-enable nil
+      lsp-ui-sideline-enable nil
       lsp-ui-doc-show-with-mouse nil
       lsp-ui-doc-position 'at-point
       lsp-ui-sideline-show-hover nil)

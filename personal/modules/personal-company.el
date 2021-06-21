@@ -58,7 +58,7 @@
     (setq-local personal-company-backend (car all)))
   (setq-local company-backends (list personal-company-backend))
   ;; the message is not shown in minibuffer, i don't know why
-  (message "current company backend: %s", personal-company-backend)
+  (message "current company backend: %s" personal-company-backend)
   ;; copy from: `company-other-backend'
   (company-cancel)
   (company-begin-backend personal-company-backend))

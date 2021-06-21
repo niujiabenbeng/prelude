@@ -102,7 +102,6 @@ delete键值会映射成deletechar, delete和DEL两者的功能似乎是一样�
 | --------------- | ------------------------------ |
 | `C-x \`         | `align-regexp`                 |
 | `C-^`           | `crux-top-join-line`           |
-| `M-/`           | `hippie-expand`                |
 | `M-z`           | `zop-up-to-char`               |
 | `C-=`           | `expand-region`                |
 | `C--`           | `shrink-region`                |
@@ -111,30 +110,25 @@ delete键值会映射成deletechar, delete和DEL两者的功能似乎是一样�
 | `<f5>`          | `personal-run-current-script`  |
 | `C-<f5>`        | `kill-compilation`             |
 | `C-<tab>`       | `personal-pattern-replace`     |
-| `C-x C-<left>`  | `winner-undo`                  |
-| `C-x C-<right>` | `winner-redo`                  |
 | `[f4]`          | `personal-neotree-project-dir` |
 | `C-M-\`         | `indent-region`                |
 
 
 ## prelude keymap
 
-| Keybinding  | description                                                   |
-| ----------- | ------------------------------------------------------------- |
-| `C-c c i`   | Search for a symbol, only for buffers that contain code.      |
-| `C-c c n`   | Fix indentation in buffer and strip whitespace.               |
-| `C-c c f`   | Open recently visited file.                                   |
-| `C-c c e`   | Eval a bit of Emacs Lisp code and replace it with its result. |
-| `C-c c s`   | Swap two active windows.                                      |
-| `C-c c D`   | Delete current file and buffer.                               |
-| `C-c c d`   | Duplicate the current line (or region).                       |
-| `C-c c r`   | Rename the current buffer and its visiting file if any.       |
-| `C-c c t`   | Open a terminal emulator (ansi-term).                         |
-| `C-c c k`   | Kill all open buffers except the one you're currently in.     |
-| `C-c c TAB` | Indent and copy region to clipboard                           |
-| `C-c c p`   | open personal configuration file for emacs                    |
-| `C-c c z`   | open personal configuration file for zsh                      |
-| `C-c c w`   | display default window configuration                          |
+| Keybinding | description                                                   |
+|------------|---------------------------------------------------------------|
+| `C-c c d`  | Duplicate current line/region.                                |
+| `C-c c D`  | Duplicate current line/region and comment previous one.       |
+| `C-c c e`  | Eval a bit of Emacs Lisp code and replace it with its result. |
+| `C-c c i`  | Search for a symbol, only for buffers that contain code.      |
+| `C-c c k`  | Kill all open buffers except the one you're currently in.     |
+| `C-c c n`  | Fix indentation in buffer and strip whitespace.               |
+| `C-c c p`  | display the full path of current file.                        |
+| `C-c c r`  | Rename the current buffer and its visiting file if any.       |
+| `C-c c s`  | Swap two active windows.                                      |
+| `C-c c u`  | Select and open file in various sources.                      |
+| `C-c c w`  | display default window configuration.                         |
 
 
 ## emacs列操作
@@ -234,6 +228,10 @@ neotree绑定键
 c++配置lsp-clangd, 目前用的c++ language server为clangd.
 
 clangd的二进制文件下载: https://releases.llvm.org/download.html
+
+跳转和补全用clangd, linter用clang-tidy, auto-formatter用clang-format.
+
+clangd和clang-tidy需要compile_commands.json, 可以用`bear make -ik all`来生成.
 
 
 ## python配置
