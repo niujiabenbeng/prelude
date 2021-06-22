@@ -63,6 +63,13 @@
   (company-cancel)
   (company-begin-backend personal-company-backend))
 
+;; remove duplicates
+(add-to-list
+ 'company-transformers
+ (lambda (candidates)
+   (cl-remove-duplicates
+    candidates :test #'string-equal :key #'substring-no-properties)))
+
 ;; set default values
 (setq-default personal-company-backends (personal-get-company-backends 'company-capf))
 (setq-default personal-company-backend (car personal-company-backends))
