@@ -522,73 +522,40 @@ otherwise return nil."
 
 ;;;;;;;;;;;;;;;;;;;;;;; personal-jump-to-thing-at-point ;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar personal--jtf-file-names
-  '("Makefile" ".gitignore" ".neoignore" ".pylintrc" ".style.yapf"
-    ".clang-format" "CMakeLists.txt")
-  "A collection of special file names")
-
-(defvar personal--jtf-file-extensions
-  '("h" "hpp" "c" "cc" "cpp" "txt" "py" "sh" "zsh" "md" "xml" "json" "yaml"
-    "el" "yml")
-  "A collection of file extensions")
-
-(defun personal--jtf-filename-p (name)
-  (when (stringp name)
-    (or (member name personal--jtf-file-names)
-        (member (file-name-extension name) personal--jtf-file-extensions))))
-
 (defun personal--jtf-find-file-by-name (name root)
   "Find file by NAME in ROOT."
   (split-string
    (shell-command-to-string
     (format "find %s -type f -name '%s'" (expand-file-name root) name))))
 
-(defun personal--jtf-find-dir-by-name (name root)
-  "Find dir by NAME in ROOT."
-  (split-string
-   (shell-command-to-string
-    (format "find %s -type d -name '%s'" (expand-file-name root) name))))
+(defun personal--fcf-get-files-at-point ()
+  "Get filenames at current point in current project."
+  (when-let* ((path (thing-at-point 'filename t))
+              (name (file-name-nondirectory path))
+              (root (projectile-project-root))
+              (files (personal--jtf-find-file-by-name name root)))
+    (cl-sort files #'> :key (lambda (x) (length (s-shared-end path x))))))
 
-(defun personal--jtf-find-file-by-dir (name root)
-  "Find dir by NAME in ROOT and list files."
-  (seq-reduce
-   (lambda (files dir)
-     (append files (directory-files-recursively dir "[[:alnum:]_-.]+$")))
-   (personal--jtf-find-dir-by-name name root) nil))
+(defun personal--fcf-get-files-match-buffer-name ()
+  "Get filenames whose names match the current buffer file name."
+  (when-let* ((path (buffer-file-name))
+              (name (file-name-base path))
+              (root (projectile-project-root))
+              (files (projectile-project-files root)))
+    (setq name (string-remove-prefix "test_" name))
+    (setq name (string-remove-prefix "unittest_" name))
+    (unless (string-empty-p name)
+      (setq files (mapcar (lambda (x) (expand-file-name x root)) files))
+      (setq files (delete path files))
+      (seq-filter
+       (lambda (x) (s-contains-p name (file-name-nondirectory x))) files))))
 
 (defun personal--jtf-get-files ()
   "Get filename from current point or buffer file name."
-  (let ((file-fn #'personal--jtf-find-file-by-name)
-        (dir-fn  #'personal--jtf-find-file-by-dir)
-        (root (projectile-project-root))
-        path name files)
-    ;; collect file whose name is under cursor
-    (setq path (thing-at-point 'filename t))
-    ;; if `path' itself exists, add it to the result
-    (and path (file-exists-p path)
-         ;; append concatenate two lists, not list and string
-         (setq files (append files (list (expand-file-name path)))))
-    (when (and root path)
-      (setq name (file-name-nondirectory path))
-      (if (personal--jtf-filename-p name)
-          (setq files (append files (apply file-fn name root nil)))
-        (setq files (append files (apply dir-fn name root nil)))))
-    ;; file with the same name
-    (setq path (buffer-file-name))
-    (when (and root path)
-      (let ((ext (file-name-extension path t))
-            (hexts '(".h" ".hpp"))
-            (sexts '(".c" ".cc" ".cpp")) dexts)
-        (setq name (file-name-base path))
-        (setq name (string-remove-prefix "test_" name))
-        (setq name (string-remove-prefix "unittest_" name))
-        (cond ((member ext hexts) (setq dexts sexts))
-              ((member ext sexts) (setq dexts hexts)))
-        (dolist (item dexts)
-          (setq item (concat name item))
-          (setq files (append files (apply file-fn item root nil))))))
-    (setq files (mapcar #'expand-file-name files))
-    (cl-remove-duplicates files :test #'string=)))
+  (or (when-let ((path (thing-at-point 'filename t)))
+        (when (file-exists-p path) (list (expand-file-name path))))
+      (personal--fcf-get-files-at-point)
+      (personal--fcf-get-files-match-buffer-name)))
 
 (defun personal-jump-to-file-at-point (&optional other-window)
   "Jump to file specified by name under cursor."

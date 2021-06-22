@@ -50,10 +50,17 @@
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
 
-(defun personal-lsp-find-definitions-other-window ()
-  "Find definitions and show in other window."
+(defun personal-lsp-find-thing-at-point ()
+  "Find file or function definition at point."
   (interactive)
-  (personal-display-result-other-window (lsp-ui-peek-find-definitions)))
+  (if-let ((files (personal--fcf-get-files-at-point)))
+      (progn (xref-push-marker-stack) (find-file (car files)))
+    (lsp-ui-peek-find-definitions)))
+
+(defun personal-lsp-find-thing-at-point-other-window ()
+  "Find file or function definition at point and show other window."
+  (interactive)
+  (personal-display-result-other-window (personal-lsp-find-thing-at-point)))
 
 (defun personal-lsp-pop-marker-stack ()
   "Show previous marker position in other window."
@@ -61,10 +68,12 @@
   (personal-display-result-other-window (xref-pop-marker-stack)))
 
 (let ((map lsp-ui-mode-map))
-  (define-key map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key map [remap xref-find-references]  #'lsp-ui-peek-find-references)
-  (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack)
-  (define-key map (kbd "C-M-.") #'personal-lsp-find-definitions-other-window))
+  (define-key map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack))
+
+(let ((map personal-mode-map))
+  (define-key map (kbd "M-.")   #'personal-lsp-find-thing-at-point)
+  (define-key map (kbd "C-M-.") #'personal-lsp-find-thing-at-point-other-window))
 
 (provide 'personal-lsp)
 
