@@ -530,11 +530,17 @@ otherwise return nil."
 
 (defun personal--fcf-get-files-at-point ()
   "Get filenames at current point in current project."
-  (when-let* ((path (thing-at-point 'filename t))
-              (name (file-name-nondirectory path))
-              (root (projectile-project-root))
-              (files (personal--jtf-find-file-by-name name root)))
-    (cl-sort files #'> :key (lambda (x) (length (s-shared-end path x))))))
+  (let ((path (thing-at-point 'filename t)) name root files keyf)
+    (when path
+      (setq path (expand-file-name path))
+      (setq name (file-name-nondirectory path))
+      (setq root (projectile-project-root))
+      (setq keyf (lambda (x) (length (s-shared-end path x))))
+      (when (file-exists-p path) (setq files (list path)))
+      (when (and root (not files))
+        (setq files (personal--jtf-find-file-by-name name root))
+        (setq files (cl-sort files #'> :key keyf))))
+    files))
 
 (defun personal--fcf-get-files-match-buffer-name ()
   "Get filenames whose names match the current buffer file name."
@@ -545,16 +551,13 @@ otherwise return nil."
     (setq name (string-remove-prefix "test_" name))
     (setq name (string-remove-prefix "unittest_" name))
     (unless (string-empty-p name)
-      (setq files (mapcar (lambda (x) (expand-file-name x root)) files))
-      (setq files (delete path files))
       (seq-filter
-       (lambda (x) (s-contains-p name (file-name-nondirectory x))) files))))
+       (lambda (x) (s-contains-p name (file-name-nondirectory x)))
+       (delete path (mapcar (lambda (x) (expand-file-name x root)) files))))))
 
 (defun personal--jtf-get-files ()
   "Get filename from current point or buffer file name."
-  (or (when-let ((path (thing-at-point 'filename t)))
-        (when (file-exists-p path) (list (expand-file-name path))))
-      (personal--fcf-get-files-at-point)
+  (or (personal--fcf-get-files-at-point)
       (personal--fcf-get-files-match-buffer-name)))
 
 (defun personal-jump-to-file-at-point (&optional other-window)
