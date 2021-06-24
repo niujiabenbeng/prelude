@@ -601,8 +601,8 @@ otherwise return nil."
       (when (looking-at "[ \t]+") (goto-char (match-end 0)))
       (setq finish t))
     (save-excursion
-      (when (re-search-forward "\\w+" nil t)
-        (setq word-end (point))))
+      ;; word-end遵循常规的word定义 (即: syntax table)
+      (forward-word) (setq word-end (point)))
     (save-excursion
       ;; sign-end仅仅是空白字符的开头
       (when (re-search-forward "[ \t]" nil t)
@@ -627,10 +627,8 @@ otherwise return nil."
       (setq finish (= (point) line-beg)))
     (when (not finish)
       (save-excursion
-        ;; 注意: `re-search-backward'会匹配较短的字符, 详情见该函数的文档.
-        ;; 这里的正则来自`forward-to-word', 然而我并不知道是什么意思.
-        (when (re-search-backward "\\W\\b" nil t)
-          (setq word-beg (match-beginning 0))))
+        ;; word-beg遵循常规的word定义 (即: syntax table)
+        (backward-word) (setq word-beg (point)))
       (save-excursion
         ;; sign-beg仅仅是空白字符的结尾
         (when (re-search-backward "[ \t]" nil t)
