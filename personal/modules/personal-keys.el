@@ -53,11 +53,13 @@
 (global-set-key [M-left]  'personal-move-text-left)
 (global-set-key [M-right] 'personal-move-text-right)
 
-;; key bindings for text editing.
-(global-set-key [M-delete] 'kill-word)
-(global-set-key [C-delete] 'kill-word)
-(global-set-key [M-backspace] 'backward-kill-word)
-(global-set-key [C-backspace] 'backward-kill-word)
+;; key bindings for word navigation but not cross multiple lines.
+(global-set-key [C-left]      'personal-backward-word)
+(global-set-key [C-right]     'personal-forward-word)
+(global-set-key [M-delete]    'personal-kill-word)
+(global-set-key [C-delete]    'personal-kill-word)
+(global-set-key [M-backspace] 'personal-backward-kill-word)
+(global-set-key [C-backspace] 'personal-backward-kill-word)
 
 ;; key bindings for some functionalities
 (global-set-key (kbd "C-;")     'personal-comment-line)

@@ -585,6 +585,68 @@ otherwise return nil."
   (interactive)
   (personal-jump-to-file-at-point t))
 
+;;;;;;;;;;;;;;;;;;;;;;;; word navigation & manipulation ;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun personal-forward-word ()
+  "Move forward one word but not cross multiple lines."
+  (interactive "^")
+  (let ((word-end (point-max))
+        (sign-end (point-max))
+        (line-end (line-end-position)) finish)
+    ;; 先前向移动到非空白字符
+    (when (looking-at "[ \t]+") (goto-char (match-end 0)))
+    ;; 光标位于行尾时, 前进到下一行的第一个非空白字符
+    (when (= (point) line-end)
+      (forward-char 1)
+      (when (looking-at "[ \t]+") (goto-char (match-end 0)))
+      (setq finish t))
+    (save-excursion
+      (when (re-search-forward "\\w+" nil t)
+        (setq word-end (point))))
+    (save-excursion
+      ;; sign-end仅仅是空白字符的开头
+      (when (re-search-forward "[ \t]" nil t)
+        (setq sign-end (match-beginning 0))))
+    (when (not finish)
+      (goto-char (min word-end sign-end line-end)))))
+
+(defun personal-backward-word ()
+  "Move backward one word but not cross multiple lines."
+  (interactive "^")
+  (let ((word-beg (point-min))
+        (sign-beg (point-min))
+        (line-beg (line-beginning-position)) finish)
+    ;; 光标位于行首时, 回退到上一行的非空白字符
+    (when (= (point) line-beg)
+      (backward-char 1)
+      (when (looking-back "[ \t]+" nil t) (goto-char (match-beginning 0)))
+      (setq finish t))
+    (when (not finish)
+      ;; 光标与行首之间只有空白字符时, 回退到行首
+      (when (looking-back "[ \t]+" nil t) (goto-char (match-beginning 0)))
+      (setq finish (= (point) line-beg)))
+    (when (not finish)
+      (save-excursion
+        ;; 注意: `re-search-backward'会匹配较短的字符, 详情见该函数的文档.
+        ;; 这里的正则来自`forward-to-word', 然而我并不知道是什么意思.
+        (when (re-search-backward "\\W\\b" nil t)
+          (setq word-beg (match-beginning 0))))
+      (save-excursion
+        ;; sign-beg仅仅是空白字符的结尾
+        (when (re-search-backward "[ \t]" nil t)
+          (setq sign-beg (match-end 0))))
+      (goto-char (max word-beg sign-beg line-beg)))))
+
+(defun personal-kill-word ()
+  "Kill word forward but not cross multiple lines."
+  (interactive)
+  (kill-region (point) (progn (personal-forward-word) (point))))
+
+(defun personal-backward-kill-word ()
+  "Kill word backward but not cross multiple lines."
+  (interactive)
+  (kill-region (point) (progn (personal-backward-word) (point))))
+
 (provide 'personal-util)
 
 ;;; personal-util.el ends here
