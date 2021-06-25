@@ -592,7 +592,8 @@ otherwise return nil."
   (interactive "^")
   (let ((word-end (point-max))
         (sign-end (point-max))
-        (line-end (line-end-position)) finish)
+        (line-end (line-end-position))
+        (pattern (rx (or ?\t ?\s ?\' ?\" ?\) ?\] ?\}))) finish)
     ;; 先前向移动到非空白字符
     (when (looking-at "[ \t]+") (goto-char (match-end 0)))
     ;; 光标位于行尾时, 前进到下一行的第一个非空白字符
@@ -604,8 +605,9 @@ otherwise return nil."
       ;; word-end遵循常规的word定义 (即: syntax table)
       (forward-word) (setq word-end (point)))
     (save-excursion
-      ;; sign-end仅仅是空白字符的开头
-      (when (re-search-forward "[ \t]" nil t)
+      ;; sign-end仅仅是空白字符或者比括号的开头
+      (when (looking-at-p pattern) (forward-char 1))
+      (when (re-search-forward pattern nil t)
         (setq sign-end (match-beginning 0))))
     (when (not finish)
       (goto-char (min word-end sign-end line-end)))))
@@ -615,7 +617,8 @@ otherwise return nil."
   (interactive "^")
   (let ((word-beg (point-min))
         (sign-beg (point-min))
-        (line-beg (line-beginning-position)) finish)
+        (line-beg (line-beginning-position))
+        (pattern (rx (or ?\t ?\s ?\' ?\" ?\( ?\[ ?\{))) finish)
     ;; 光标位于行首时, 回退到上一行的非空白字符
     (when (= (point) line-beg)
       (backward-char 1)
@@ -630,8 +633,9 @@ otherwise return nil."
         ;; word-beg遵循常规的word定义 (即: syntax table)
         (backward-word) (setq word-beg (point)))
       (save-excursion
-        ;; sign-beg仅仅是空白字符的结尾
-        (when (re-search-backward "[ \t]" nil t)
+        ;; sign-beg仅仅是空白字符或者开括号的结尾
+        (when (looking-back pattern 1) (backward-char 1))
+        (when (re-search-backward pattern nil t)
           (setq sign-beg (match-end 0))))
       (goto-char (max word-beg sign-beg line-beg)))))
 
