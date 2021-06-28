@@ -7,6 +7,7 @@
 
 (setenv "USE_EMACS" "1")
 
+(add-to-list 'load-path (expand-file-name "lisp"     prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "modules"  prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "packages" prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "programs" prelude-personal-dir))
