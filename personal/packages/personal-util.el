@@ -218,7 +218,7 @@ It is initialized in the beginning of that function.")
   (let ((show (if show-full-path path name)))
     (when (not (file-exists-p path))
       (setq show (personal--fcf-wrap-nonexist show)))
-    (cons show (expand-file-name path))))
+    (cons show (file-truename (expand-file-name path)))))
 
 (defun personal--fcf-get-prefix (paths)
   "Return common directory of all paths."

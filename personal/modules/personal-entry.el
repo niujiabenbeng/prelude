@@ -30,7 +30,7 @@
     ;; a display problem may occur, so we redraw display 0.5s later.
     (run-with-timer 0.5 nil 'redraw-display)))
 
-(defun emacs-client-save-session (session)
+(defun emacs-client-save-session ()
   "Save emacs client session."
   (unless (file-directory-p psession-elisp-objects-default-directory)
     (make-directory psession-elisp-objects-default-directory t))
@@ -38,14 +38,20 @@
   (psession--dump-some-buffers-to-list)
   (psession--dump-object-to-file-save-alist))
 
-(defun emacs-client-load-session (session)
+(defun emacs-client-load-session ()
   "Restore last emacs client session."
   (psession-restore-last-winconf)
   (psession--restore-some-buffers)
   (psession--restore-objects-from-directory))
 
-(add-to-list 'delete-frame-functions #'emacs-client-save-session)
-;; (add-to-list 'after-make-frame-functions #'emacs-client-load-session)
+;; save current session before exiting emacs
+(global-set-key
+ (kbd "C-x C-c")
+ (lambda () (interactive)
+   (when (file-directory-p psession-elisp-objects-default-directory)
+     (delete-directory psession-elisp-objects-default-directory t))
+   (emacs-client-save-session)
+   (save-buffers-kill-terminal 1)))
 
 (provide 'personal-entry)
 

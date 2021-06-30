@@ -53,27 +53,37 @@
 (defun personal-lsp-find-thing-at-point ()
   "Find file or function definition at point."
   (interactive)
-  (if-let ((files (personal--fcf-get-files-at-point)))
-      (progn (xref-push-marker-stack) (find-file (car files)))
-    (lsp-ui-peek-find-definitions)))
+  (let ((files (personal--fcf-get-files-at-point))
+        (symbol (symbol-at-point)) finish)
+    (when files
+      (xref-push-marker-stack)
+      (find-file (car files))
+      (setq finish t))
+    (when (and (not finish) (not symbol))
+      ;; use `error' to prevent jumping to other window in
+      ;; `personal-lsp-find-thing-at-point-other-window'
+      (error "Not found symbol at point.")
+      (setq finish t))
+    (when (and (not finish) (eq major-mode 'emacs-lisp-mode))
+      (elisp-slime-nav-find-elisp-thing-at-point (symbol-name symbol))
+      (setq finish t))
+    (when (not finish)
+      (lsp-ui-peek-find-definitions))))
 
 (defun personal-lsp-find-thing-at-point-other-window ()
   "Find file or function definition at point and show other window."
   (interactive)
   (personal-display-result-other-window (personal-lsp-find-thing-at-point)))
 
-(defun personal-lsp-pop-marker-stack ()
+(defun personal-lsp-pop-marker-stack-other-window ()
   "Show previous marker position in other window."
   (interactive)
   (personal-display-result-other-window (xref-pop-marker-stack)))
 
-(let ((map lsp-ui-mode-map))
-  (define-key map [remap xref-find-references] #'lsp-ui-peek-find-references)
-  (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack))
-
 (let ((map personal-mode-map))
   (define-key map (kbd "M-.")   #'personal-lsp-find-thing-at-point)
-  (define-key map (kbd "C-M-.") #'personal-lsp-find-thing-at-point-other-window))
+  (define-key map (kbd "C-M-.") #'personal-lsp-find-thing-at-point-other-window)
+  (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack-other-window))
 
 (provide 'personal-lsp)
 

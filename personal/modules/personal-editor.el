@@ -85,6 +85,10 @@
 ;; move window in a loop manner
 (setq windmove-wrap-around t)
 
+;; do not save file when switching window, because sometimes it takes seconds to
+;; save a file. I don't known why it is so slow.
+(super-save-mode -1)
+
 (provide 'personal-editor)
 
 ;;; personal-editor.el ends here
