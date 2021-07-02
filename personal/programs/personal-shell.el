@@ -28,10 +28,10 @@
 (add-hook 'sh-mode-hook 'my-shell-mode-setup-imenu)
 
 ;; set company backends
-(personal-set-company-backends
+(personal-company-set-backends
  'sh-mode-hook
  '((company-abbrev company-dabbrev company-dabbrev-code)
-   (company-files company-keywords company-capf company-yasnippet)))
+   (company-files company-capf company-yasnippet)))
 
 (provide 'personal-shell)
 

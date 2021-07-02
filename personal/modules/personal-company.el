@@ -32,17 +32,17 @@
 
 (defvar-local personal-company-backend nil "Backend in use")
 
-(defun personal-get-company-backends (major-backend)
-  `((,major-backend company-files company-keywords company-yasnippet)
+(defun personal-company-get-backends (major-backend)
+  `((,major-backend company-files company-yasnippet)
     (company-abbrev company-dabbrev company-dabbrev-code)))
 
-(defun personal-set-company-backends (hook backends)
+(defun personal-company-set-backends (hook backends)
   "Set company backends to file local variables."
   (add-hook hook
             (lambda ()
               (setq-local personal-company-backends backends)
               (setq-local personal-company-backend (car backends))
-              (setq-local company-backends (list personal-company-backend)))))
+              (setq-local company-backends (list personal-company-backend)))) t)
 
 (defun personal-company-other-backend ()
   "Set company backend to next one and regenerate candidates."
@@ -63,15 +63,8 @@
   (company-cancel)
   (company-begin-backend personal-company-backend))
 
-;; remove duplicates
-(add-to-list
- 'company-transformers
- (lambda (candidates)
-   (cl-remove-duplicates
-    candidates :test #'string-equal :key #'substring-no-properties)))
-
 ;; set default values
-(setq-default personal-company-backends (personal-get-company-backends 'company-capf))
+(setq-default personal-company-backends (personal-company-get-backends 'company-capf))
 (setq-default personal-company-backend (car personal-company-backends))
 (setq-default company-backends (list personal-company-backend))
 
@@ -79,6 +72,17 @@
 (define-key company-mode-map [remap completion-at-point] 'company-complete)
 (define-key company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)
 (define-key company-mode-map (kbd "M-/") 'personal-company-other-backend)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; candidate transformer ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: sort the final result
+
+;; remove duplicates
+(add-to-list
+ 'company-transformers
+ (lambda (candidates)
+   (cl-remove-duplicates
+    candidates :test #'string-equal :key #'substring-no-properties)))
 
 (provide 'personal-company)
 

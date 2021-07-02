@@ -594,7 +594,7 @@ otherwise return nil."
   (let ((word-end (point-max))
         (sign-end (point-max))
         (line-end (line-end-position))
-        (pattern (rx (or ?\t ?\s ?\' ?\" ?\) ?\] ?\}))) finish)
+        (pattern (rx (or ?\t ?\s ?\' ?\" ?\` ?\( ?\[ ?\{ ?\) ?\] ?\}))) finish)
     ;; 先前向移动到非空白字符
     (when (looking-at "[ \t]+") (goto-char (match-end 0)))
     ;; 光标位于行尾时, 前进到下一行的第一个非空白字符
@@ -602,15 +602,18 @@ otherwise return nil."
       (forward-char 1)
       (when (looking-at "[ \t]+") (goto-char (match-end 0)))
       (setq finish t))
-    (save-excursion
-      ;; word-end遵循常规的word定义 (即: syntax table)
-      (forward-word) (setq word-end (point)))
-    (save-excursion
-      ;; sign-end仅仅是空白字符或者比括号的开头
-      (when (looking-at-p pattern) (forward-char 1))
-      (when (re-search-forward pattern nil t)
-        (setq sign-end (match-beginning 0))))
+    ;; 光标正好位于stop标志时, 前进到stop标志的结尾
+    (when (and (not finish) (looking-at pattern))
+      (goto-char (match-end 0))
+      (setq finish t))
     (when (not finish)
+      (save-excursion
+        ;; word-end遵循常规的word定义 (即: syntax table)
+        (forward-word) (setq word-end (point)))
+      (save-excursion
+        ;; sign-end仅仅是stop标志的开头
+        (when (re-search-forward pattern nil t)
+          (setq sign-end (match-beginning 0))))
       (goto-char (min word-end sign-end line-end)))))
 
 (defun personal-backward-word ()
@@ -619,23 +622,26 @@ otherwise return nil."
   (let ((word-beg (point-min))
         (sign-beg (point-min))
         (line-beg (line-beginning-position))
-        (pattern (rx (or ?\t ?\s ?\' ?\" ?\( ?\[ ?\{))) finish)
+        (pattern (rx (or ?\t ?\s ?\' ?\" ?\` ?\( ?\[ ?\{ ?\) ?\] ?\}))) finish)
     ;; 光标位于行首时, 回退到上一行的非空白字符
     (when (= (point) line-beg)
       (backward-char 1)
       (when (looking-back "[ \t]+" nil t) (goto-char (match-beginning 0)))
       (setq finish t))
+    ;; 光标与行首之间只有空白字符时, 回退到行首
     (when (not finish)
-      ;; 光标与行首之间只有空白字符时, 回退到行首
       (when (looking-back "[ \t]+" nil t) (goto-char (match-beginning 0)))
       (setq finish (= (point) line-beg)))
+    ;; 光标正好位于stop标志时, 回退到stop标志的开头
+    (when (and (not finish) (looking-back pattern nil t))
+      (goto-char (match-beginning 0))
+      (setq finish t))
     (when (not finish)
       (save-excursion
         ;; word-beg遵循常规的word定义 (即: syntax table)
         (backward-word) (setq word-beg (point)))
       (save-excursion
-        ;; sign-beg仅仅是空白字符或者开括号的结尾
-        (when (looking-back pattern 1) (backward-char 1))
+        ;; sign-beg仅仅是stop标志的结尾
         (when (re-search-backward pattern nil t)
           (setq sign-beg (match-end 0))))
       (goto-char (max word-beg sign-beg line-beg)))))

@@ -15,9 +15,9 @@
 (add-hook 'prog-mode-hook 'subword-mode)
 
 ;; set backends for cmake mode
-(personal-set-company-backends
+(personal-company-set-backends
  'cmake-mode-hook
- (personal-get-company-backends 'company-cmake))
+ (personal-company-get-backends 'company-cmake))
 
 (provide 'personal-programming)
 
