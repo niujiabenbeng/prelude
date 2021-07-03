@@ -26,63 +26,18 @@
 (global-company-mode 1)
 (company-quickhelp-mode 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; backend settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar-local personal-company-backends nil "All backends")
-
-(defvar-local personal-company-backend nil "Backend in use")
+;; borrowed from prucell emacs `lisp/init-company.el'
+(define-key company-mode-map [remap completion-at-point] 'company-complete)
+(define-key company-mode-map [remap indent-for-tab-command]
+  'company-indent-or-complete-common)
+(define-key company-mode-map (kbd "M-/") 'company-other-backend)
 
 (defun personal-company-get-backends (major-backend)
   `((,major-backend company-files company-yasnippet)
     (company-abbrev company-dabbrev company-dabbrev-code)))
 
 (defun personal-company-set-backends (hook backends)
-  "Set company backends to file local variables."
-  (add-hook hook
-            (lambda ()
-              (setq-local personal-company-backends backends)
-              (setq-local personal-company-backend (car backends))
-              (setq-local company-backends (list personal-company-backend)))) t)
-
-(defun personal-company-other-backend ()
-  "Set company backend to next one and regenerate candidates."
-  (interactive)
-  (unless (looking-back "[-_/.0-9a-zA-Z]")
-    (user-error "Cannot complete without prefix."))
-  (when (looking-at-p "[-_/.0-9a-zA-Z]")
-    (user-error "Cannot complete in the middle of a word."))
-  (if-let* ((all  personal-company-backends)
-            (curr personal-company-backend)
-            (next (cadr (member curr all))))
-      (setq-local personal-company-backend next)
-    (setq-local personal-company-backend (car all)))
-  (setq-local company-backends (list personal-company-backend))
-  ;; the message is not shown in minibuffer, i don't know why
-  (message "current company backend: %s" personal-company-backend)
-  ;; copy from: `company-other-backend'
-  (company-cancel)
-  (company-begin-backend personal-company-backend))
-
-;; set default values
-(setq-default personal-company-backends (personal-company-get-backends 'company-capf))
-(setq-default personal-company-backend (car personal-company-backends))
-(setq-default company-backends (list personal-company-backend))
-
-;; borrowed from prucell emacs `lisp/init-company.el'
-(define-key company-mode-map [remap completion-at-point] 'company-complete)
-(define-key company-mode-map [remap indent-for-tab-command] 'company-indent-or-complete-common)
-(define-key company-mode-map (kbd "M-/") 'personal-company-other-backend)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;; candidate transformer ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; TODO: sort the final result
-
-;; remove duplicates
-(add-to-list
- 'company-transformers
- (lambda (candidates)
-   (cl-remove-duplicates
-    candidates :test #'string-equal :key #'substring-no-properties)))
+  (add-hook hook (lambda () (setq company-backends backends))))
 
 (provide 'personal-company)
 

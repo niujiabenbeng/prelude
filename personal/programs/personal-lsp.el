@@ -85,6 +85,13 @@
   (define-key map (kbd "C-M-.") #'personal-lsp-find-thing-at-point-other-window)
   (define-key map (kbd "C-M-,") #'personal-lsp-pop-marker-stack-other-window))
 
+;; set backends for all programming languages.
+;; note `lsp-completion' modifies variable `company-backends'.
+;; we should set `company-backends' after lsp is initialized.
+(personal-company-set-backends
+ 'lsp-after-open-hook
+ (personal-company-get-backends 'company-capf))
+
 (provide 'personal-lsp)
 
 ;;; personal-lsp.el ends here
