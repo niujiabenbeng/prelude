@@ -6,7 +6,9 @@
 ;; Enhanced company settings for personal use. This configuration
 ;; combines prelude emacs settings and prucell emacs settings.
 
-;; tip: `company-diag' to show backend currently used.
+;; tip:
+;; * `company-diag' to show backend currently used.
+;; * `M-<number>' to complete using the line with that number.
 
 ;;;Code:
 
@@ -33,11 +35,36 @@
 (define-key company-mode-map (kbd "M-/") 'company-other-backend)
 
 (defun personal-company-get-backends (major-backend)
-  `((,major-backend company-files company-yasnippet)
-    (company-abbrev company-dabbrev company-dabbrev-code)))
+  `((,major-backend company-files)
+    (company-abbrev company-dabbrev company-dabbrev-code)
+    (company-yasnippet)))
 
 (defun personal-company-set-backends (hook backends)
   (add-hook hook (lambda () (setq company-backends backends))))
+
+(defun personal-company-transformer (candidates)
+  "Prevent completion in some certain situations."
+  (let ((regex (rx (or (char alnum) "::" "-" "_" "@" "/" ".")))
+        (limit (save-excursion (backward-char 2) (point))))
+    (when (and candidates (not (looking-back regex limit)))
+      (error "text before point does not meet requirement.")
+      (setq candidates nil)))
+  (let ((regex (rx (or (char alnum)))))
+    (when (and candidates (looking-at-p regex))
+      (error "text after point does not meet requirement.")
+      (setq candidates nil)))
+  candidates)
+
+(defmacro personal-company-add-transformer (mode &rest body)
+  "Add mode specific transformer to company mode."
+  `(add-to-list
+    'company-transformers
+    (lambda (candidates)
+      (print ,mode)
+      (if (and candidates (eq major-mode ,mode))
+          (progn ,@body) candidates)) t))
+
+(add-to-list 'company-transformers #'personal-company-transformer t)
 
 (provide 'personal-company)
 

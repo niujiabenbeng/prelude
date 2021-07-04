@@ -28,6 +28,28 @@
 (setq lsp-pylsp-plugins-pylint-enabled t)
 (add-hook 'python-mode-hook #'lsp-deferred)
 
+(defun personal-python-calc-candidate-score (candidate prefix)
+  (let ((score 0))
+    (when (s-starts-with-p "_" candidate)
+      (setq score (- score 100)))
+    (when (s-starts-with-p "__" candidate)
+      (setq score (- score 100)))
+    (when (s-starts-with-p prefix candidate)
+      (setq score (+ score 1000)))
+    (when (s-starts-with-p prefix candidate t)
+      (setq score (+ score 1000)))
+    score))
+
+(personal-company-add-transformer
+ 'python-mode
+ (let ((prefix (company-grab-symbol)))
+   (setq prefix (or prefix ""))
+   (cl-stable-sort
+    candidates '> :key
+    (lambda (x)
+      (personal-python-calc-candidate-score
+       (substring-no-properties x) prefix)))))
+
 (provide 'personal-python)
 
 ;;; personal-python.el ends here
