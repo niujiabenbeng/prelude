@@ -60,7 +60,6 @@
   `(add-to-list
     'company-transformers
     (lambda (candidates)
-      (print ,mode)
       (if (and candidates (eq major-mode ,mode))
           (progn ,@body) candidates)) t))
 
