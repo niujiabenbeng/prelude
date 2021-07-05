@@ -30,8 +30,11 @@
 ;; set company backends
 (personal-company-set-backends
  'sh-mode-hook
- '((company-abbrev company-dabbrev company-dabbrev-code company-files)
-   (company-capf company-yasnippet)))
+ '((company-abbrev company-dabbrev company-dabbrev-code)
+   company-files
+   company-semantic
+   company-ispell
+   company-yasnippet))
 
 (provide 'personal-shell)
 

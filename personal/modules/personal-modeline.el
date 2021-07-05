@@ -17,7 +17,8 @@
 (defun personal-diminish-all ()
   "Hide all minor modes in mode line."
   (dolist (mode minor-mode-alist)
-    (diminish (car mode))))
+    (diminish (car mode)))
+  (diminish-undo 'company-mode))
 
 (add-hook 'after-init-hook  #'personal-diminish-all t)
 (add-hook 'emacs-lisp-mode  #'personal-diminish-all t)
