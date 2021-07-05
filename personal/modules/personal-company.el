@@ -62,7 +62,7 @@
       (if (and candidates (eq major-mode ,mode))
           (progn ,@body) candidates)) t))
 
-(defun personal-company-allow-completion-p (&rest args)
+(defun personal-company-allow-completion-p ()
   "Prevent completion in some certain situations."
   (let ((regex (rx (or (char alnum) "::" "-" "_" "@" "/" ".")))
         (limit (save-excursion (backward-char 2) (point))))
@@ -72,8 +72,16 @@
     (when (looking-at-p regex)
       (error "text after point does not meet requirement."))))
 
-(add-hook 'company-transformers #'personal-company-allow-completion-p)
-(add-hook 'company-completion-started-hook #'personal-company-allow-completion-p)
+;; prevent completion when the completion process is automatically invoked.
+(add-hook
+ 'company-completion-started-hook
+ (lambda (manual) (personal-company-allow-completion-p)))
+
+;; prevent completion when the completion process is manually invoked
+(add-hook
+ 'company-transformers
+ (lambda (candidates) (personal-company-allow-completion-p) candidates))
+
 (setq-default company-backends (personal-company-get-backends 'company-capf))
 
 (provide 'personal-company)
