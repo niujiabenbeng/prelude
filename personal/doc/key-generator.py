@@ -1,12 +1,12 @@
-#! /home/chenli/Documents/tools/anaconda3/envs/pytorch/bin/python
+#! /usr/bin/env python
 # coding: utf-8
 
 # pylint: disable=all
 
-"""
-为方向键, 控制键, 功能键等生成ASCII字符序列. 本程序依靠人为设定的规则生成
-ASCII字符序列. 对于常用按键, 如果PUTTY产生了字符序列, 则不另外生成, 只在
-emacs端将字符序列映射到对应的按键.
+"""为方向键, 控制键, 功能键等生成ASCII字符序列.
+
+本程序依靠人为设定的规则生成ASCII字符序列. 对于常用按键, 如果PUTTY产生了
+字符序列, 则不另外生成, 只在emacs端将字符序列映射到对应的按键.
 
 PUTTY产生的字符序列可以通过cat命令查看.
 emacs端接收到的字符序列可以通过命令`C-h l`查看.

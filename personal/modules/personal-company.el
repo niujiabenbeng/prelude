@@ -10,9 +10,6 @@
 ;; * `company-diag' to show backend currently used.
 ;; * `M-<number>' to complete using the line with that number.
 
-;; TODO: more useful company-ispell, which only contains the cet-4 and cet-6
-;; english words.
-
 ;;;Code:
 
 (prelude-require-packages '(company company-quickhelp))
@@ -28,6 +25,8 @@
 (setq company-dabbrev-other-buffers t)
 (setq company-dabbrev-code-everywhere t)
 (setq company-abort-manual-when-too-short t)
+(setq company-ispell-dictionary
+      (expand-file-name "doc/cet6.txt" prelude-personal-dir))
 
 (global-company-mode 1)
 (company-quickhelp-mode 1)

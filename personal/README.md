@@ -283,3 +283,12 @@ pylint的配置文件为:pylintrc. 如果python文件不在module中, 则pylint�
 寻找pylintrc, 这里我们通过修改pylint的源码来确保pylint能找到对应的配置文件.
 源码位于: `/pylint/config/find_default_config_files.py`
 在`find_default_config_files`函数中, 去掉对`__init__.py`的限制即可.
+
+具体实现参考:
+
+``` python
+if True:
+    curdir = os.path.abspath(os.getcwd())
+    while not os.path.samefile(curdir, "/"):
+        curdir = os.path.abspath(os.path.join(curdir, ".."))
+```
