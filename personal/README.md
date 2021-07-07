@@ -239,6 +239,7 @@ clangd和clang-tidy需要compile_commands.json, 可以用`bear make -ik all`来�
 #### python-lsp
 
 python配置用python-lsp, 目前用的python language server为python-lsp-server.
+安装命令: `pip install 'python-lsp-server[all]'`
 
 python-lsp-server支持的插件如下:
 
