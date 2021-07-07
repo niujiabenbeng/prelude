@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+(require 's)
 (require 'smartparens)
 
 (defun personal-get-enclosing-sexp ()
@@ -61,8 +62,8 @@
   "Restrict FUNCTION to perform on navigation pairs."
   (let (name)
     ;; we define a named function for better documentation.
-    (setq name (replace-regexp-in-string "^sp-" "personal-" (symbol-name function)))
-    (setq name (replace-regexp-in-string "sexp$" "pair" name))
+    (setq name (s-replace-regexp "^sp-" "personal-" (symbol-name function)))
+    (setq name (s-replace-regexp "sexp$" "pair" name))
     (setq name (s-replace "-sexp-" "-pair-" name))
     `(defun ,(intern name) (&optional _arg)
        ,(format "Balanced pair restricted version of `%s'." function)
