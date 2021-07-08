@@ -29,26 +29,27 @@
 (add-hook 'python-mode-hook #'lsp-deferred)
 
 (defun personal-python-calc-candidate-score (candidate prefix)
-  (let ((score 0))
-    (when (s-starts-with-p "_" candidate)
+  (let ((text (substring-no-properties candidate))
+        (score 0))
+    ;; put candidates from `company-capf' at the head of list
+    (when (get-text-property 0 'lsp-completion-item candidate)
+      (setq score (+ score 500)))
+    (when (s-starts-with-p "_" text)
       (setq score (- score 100)))
-    (when (s-starts-with-p "__" candidate)
+    (when (s-starts-with-p "__" text)
       (setq score (- score 100)))
-    (when (s-starts-with-p prefix candidate)
+    (when (s-starts-with-p prefix text)
       (setq score (+ score 1000)))
-    (when (s-starts-with-p prefix candidate t)
+    (when (s-starts-with-p prefix text t)
       (setq score (+ score 1000)))
     score))
 
 (personal-company-add-transformer
  'python-mode
- (let ((prefix (company-grab-symbol)))
-   (setq prefix (or prefix ""))
+ (let ((prefix (or (company-grab-symbol) "")))
    (cl-stable-sort
     candidates '> :key
-    (lambda (x)
-      (personal-python-calc-candidate-score
-       (substring-no-properties x) prefix)))))
+    (lambda (x) (personal-python-calc-candidate-score x prefix)))))
 
 (provide 'personal-python)
 

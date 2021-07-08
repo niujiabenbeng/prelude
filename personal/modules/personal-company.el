@@ -66,21 +66,13 @@
   (let ((regex (rx (or (char alnum) "::" "-" "_" "@" "/" ".")))
         (limit (save-excursion (backward-char 2) (point))))
     (when (not (looking-back regex limit))
-      (error "text before point does not meet requirement.")))
+      (user-error "text before point does not meet requirement.")))
   (let ((regex (rx (or (char alnum)))))
     (when (looking-at-p regex)
-      (error "text after point does not meet requirement."))))
+      (user-error "text after point does not meet requirement."))))
 
-;; prevent completion when the completion process is automatically invoked.
-(add-hook
- 'company-completion-started-hook
- (lambda (manual) (personal-company-allow-completion-p)))
-
-;; prevent completion when the completion process is manually invoked
-(add-hook
- 'company-transformers
- (lambda (candidates) (personal-company-allow-completion-p) candidates))
-
+(advice-add 'company-auto-begin   :before #'personal-company-allow-completion-p)
+(advice-add 'company-manual-begin :before #'personal-company-allow-completion-p)
 (setq-default company-backends (personal-company-get-backends 'company-capf))
 
 (provide 'personal-company)
