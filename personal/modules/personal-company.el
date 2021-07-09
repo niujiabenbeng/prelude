@@ -62,17 +62,24 @@
           (progn ,@body) candidates)) t))
 
 (defun personal-company-allow-completion-p ()
-  "Prevent completion in some certain situations."
-  (let ((regex (rx (or (char alnum) "::" "-" "_" "@" "/" ".")))
-        (limit (save-excursion (backward-char 2) (point))))
-    (when (not (looking-back regex limit))
-      (user-error "text before point does not meet requirement.")))
-  (let ((regex (rx (or (char alnum)))))
-    (when (looking-at-p regex)
-      (user-error "text after point does not meet requirement."))))
+  "Check whether the context around point support completion or not."
+  (let ((limit (save-excursion (backward-char 2) (point))))
+    (and (looking-back (rx (or (char alnum) "::" "-" "_" "@" "/" ".")) limit)
+         (looking-at-p (rx (or (not (char alnum))))))))
 
-(advice-add 'company-auto-begin   :before #'personal-company-allow-completion-p)
-(advice-add 'company-manual-begin :before #'personal-company-allow-completion-p)
+(advice-add
+ 'company-auto-begin :around
+ (lambda (org-fun &rest args)
+   (when (personal-company-allow-completion-p)
+     (apply org-fun args))))
+
+(advice-add
+ 'company-manual-begin :around
+ (lambda (org-fun &rest args)
+   (if (personal-company-allow-completion-p)
+       (apply org-fun args)
+     (user-error "Context around point does not meet requirement"))))
+
 (setq-default company-backends (personal-company-get-backends 'company-capf))
 
 (provide 'personal-company)
