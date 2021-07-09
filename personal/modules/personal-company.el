@@ -65,7 +65,7 @@
   "Check whether the context around point support completion or not."
   (let ((limit (save-excursion (backward-char 2) (point))))
     (and (looking-back (rx (or (char alnum) "::" "-" "_" "@" "/" ".")) limit)
-         (looking-at-p (rx (or (not (char alnum))))))))
+         (looking-at-p (rx (or (not (char alnum)) eol))))))
 
 (advice-add
  'company-auto-begin :around

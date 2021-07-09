@@ -233,6 +233,14 @@ clangd的二进制文件下载: https://releases.llvm.org/download.html
 
 clangd和clang-tidy需要compile_commands.json, 可以用`bear make -ik all`来生成.
 
+配置文件
+
+1. clangd暂时不需要配置文件
+2. clang-tidy需要配置文件`.clang-tidy`
+3. clang-format需要配置文件`.clang-format`
+
+这以上配置文件都可以在`cpp-template`中找到.
+
 
 ## python配置
 
@@ -277,6 +285,15 @@ python-lsp-server支持的插件如下:
 1. 跳转和补全用jedi.
 2. linter用flake8或pylint, 选pylint, 因为pylint可定制化更好.
 3. auto-formatter用autopep8或者yapf. 选yapf, 因为yapf可定制化更好.
+
+配置文件:
+
+1. jedi不需要配置文件
+2. pylint需要配置文件: `.pylintrc`
+3. yapf需要配置文件: `.style.yapf`
+
+以上配置文件都可以在`python-template`中找到.
+
 
 #### pylintrc
 
