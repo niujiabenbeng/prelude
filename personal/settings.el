@@ -12,7 +12,22 @@
 (add-to-list 'load-path (expand-file-name "packages" prelude-personal-dir))
 (add-to-list 'load-path (expand-file-name "programs" prelude-personal-dir))
 
-(prelude-require-packages '(neotree yasnippet))
+(prelude-require-packages '(s neotree psession dash yasnippet))
+
+(defun personal-get-package-version (package)
+  (when-let (info (alist-get package package-alist))
+    (package-version-join (package-desc-version (car info)))))
+
+(defun personal-check-package-version (package version-required)
+  (if-let ((version (personal-get-package-version package)))
+      (when (string-version-lessp version version-required)
+        (error "package '%s' is too old" package))
+    (error "do not find package '%s'" package)))
+
+(personal-check-package-version 's "20210616.619")
+(personal-check-package-version 'dash "20210704.1302")
+(personal-check-package-version 'neotree "20200324.1946")
+(personal-check-package-version 'psession "20210203.828")
 
 ;;; Load prelude modules
 (require 'prelude-helm)
