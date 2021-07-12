@@ -19,7 +19,7 @@
 (setq company-idle-delay 0.2)
 (setq company-show-numbers t)
 (setq company-tooltip-limit 10)
-(setq company-minimum-prefix-length 2)
+(setq company-minimum-prefix-length 0)
 (setq company-tooltip-align-annotations t)
 (setq company-tooltip-flip-when-above nil)
 (setq company-dabbrev-other-buffers t)
@@ -51,7 +51,10 @@
 
 (defun personal-company-set-backends (hook backends)
   "Set `company-backends' to BACKENDS in HOOK."
-  (add-hook hook (lambda () (setq company-backends backends))))
+  (add-hook hook
+            (lambda ()
+              (make-local-variable 'company-backends)
+              (setq company-backends backends))))
 
 (defmacro personal-company-add-transformer (mode &rest body)
   "Add mode specific transformer to company mode."

@@ -11,38 +11,30 @@
 
 (setq lsp-keymap-prefix "C-c l"
       lsp-keep-workspace-alive nil
-      lsp-signature-auto-activate nil
-      lsp-modeline-code-actions-enable nil
-      lsp-modeline-diagnostics-enable nil
-      lsp-modeline-workspace-status-enable nil
 
       lsp-auto-guess-root t
       lsp-idle-delay 0.1
       lsp-response-timeout 5
-      lsp-ui-doc-enable nil
-      lsp-enable-snippet t
 
-      lsp-enable-file-watchers nil
-      lsp-enable-folding nil
-      lsp-enable-semantic-highlighting nil
+      ;; prevent underscore below symbols
       lsp-enable-symbol-highlighting nil
-      lsp-enable-text-document-color nil
+      ;; prevent underscore below c++ include
       lsp-enable-links nil
+      ;; prevent a line above the working window
       lsp-headerline-breadcrumb-enable nil
-
-      lsp-enable-indentation nil
-      lsp-enable-on-type-formatting nil)
+      )
 
 (setq lsp-ui-doc-max-height 8
       lsp-ui-doc-max-width 35
       lsp-ui-sideline-ignore-duplicate t
       lsp-ui-peek-enable t
       lsp-ui-imenu-enable t
-      lsp-ui-doc-enable nil
-      lsp-ui-sideline-enable nil
-      lsp-ui-doc-show-with-mouse nil
+      ;; lsp-ui-doc-enable nil
+      ;; lsp-ui-sideline-enable nil
+      ;; lsp-ui-doc-show-with-mouse nil
       lsp-ui-doc-position 'at-point
-      lsp-ui-sideline-show-hover nil)
+      ;; lsp-ui-sideline-show-hover nil
+      )
 
 (prelude-require-packages '(lsp-mode lsp-ui))
 (require 'lsp-mode)
