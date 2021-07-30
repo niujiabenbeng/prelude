@@ -19,12 +19,12 @@
 (setq company-idle-delay 0.2)
 (setq company-show-numbers t)
 (setq company-tooltip-limit 10)
-(setq company-minimum-prefix-length 0)
+(setq company-minimum-prefix-length 2)
 (setq company-tooltip-align-annotations t)
 (setq company-tooltip-flip-when-above nil)
 (setq company-dabbrev-other-buffers t)
 (setq company-dabbrev-code-everywhere t)
-(setq company-abort-manual-when-too-short t)
+(setq company-abort-manual-when-too-short nil)
 (setq company-ispell-dictionary
       (expand-file-name "doc/cet6.txt" prelude-personal-dir))
 
@@ -56,6 +56,15 @@
               (make-local-variable 'company-backends)
               (setq company-backends backends))))
 
+(defun personal-company-get-prefix ()
+  "Return symbol at point, if symbol not found, return empty string."
+  (let ((text (company-grab-symbol)))
+    (if text (string-trim text) "")))
+
+(defun personal-company-get-text (candidate)
+  "Return text from a CANDIDATE."
+  (string-trim (substring-no-properties candidate)))
+
 (defmacro personal-company-add-transformer (mode &rest body)
   "Add mode specific transformer to company mode."
   `(add-to-list
@@ -67,7 +76,7 @@
 (defun personal-company-allow-completion-p ()
   "Check whether the context around point support completion or not."
   (let ((limit (save-excursion (backward-char 2) (point))))
-    (and (looking-back (rx (or (char alnum) "::" "-" "_" "@" "/" ".")) limit)
+    (and (looking-back (rx (or (char alnum) "::" "-" "_" "@" "/" "." "->")) limit)
          (looking-at-p (rx (or (not (char alnum)) eol))))))
 
 (advice-add
@@ -82,6 +91,14 @@
    (if (personal-company-allow-completion-p)
        (apply org-fun args)
      (user-error "Context around point does not meet requirement"))))
+
+(add-to-list
+ 'company-transformers
+ (lambda (candidates)
+   ;; do not generate candidates when the completion is not allowed
+   (unless (personal-company-allow-completion-p)
+     (setq candidates nil))
+   candidates))
 
 (setq-default company-backends (personal-company-get-backends 'company-capf))
 

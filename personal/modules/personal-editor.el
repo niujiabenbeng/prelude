@@ -87,7 +87,10 @@
 
 ;; do not save file when switching window, because sometimes it takes seconds to
 ;; save a file. I don't known why it is so slow.
-(super-save-mode -1)
+;; (super-save-mode -1)
+
+;; This is the cause of the problem that saving a file is prohibitively slow.
+(setq undo-tree-auto-save-history nil)
 
 (provide 'personal-editor)
 

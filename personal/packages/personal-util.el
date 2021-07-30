@@ -157,17 +157,27 @@
         (setq commands (cons (string-trim command) commands))))
     (reverse commands)))
 
+(defun personal-locate-dominating-file (name &optional file)
+  "Starting at FILE, look up directory hierarchy for file with name NAME.
+Return path of that file if found, otherwise return nil.
+If FILE is nil, use current visiting file as the start point."
+  (setq file (or file (buffer-file-name)))
+  (when file
+    (when-let ((dirname (locate-dominating-file file name)))
+      (expand-file-name name dirname))))
+
 (defun personal-run-current-script ()
   "Run current script using Shebang."
   (interactive)
-  (if (null (buffer-file-name))
-      (message "Current buffer is not attached to any file.")
-    (when (buffer-modified-p) (save-buffer))
-    (if (string= (buffer-substring-no-properties 1 3) "#!")
-        (if compilation-in-progress
-            (message "The compilation process is running.")
-          (compile (buffer-file-name) t))
-      (message "Current file does not have a shebang line."))))
+  (let ((runfile (personal-locate-dominating-file "run.sh")))
+    (cond (compilation-in-progress
+           (message "The compilation process is running."))
+          ((null (buffer-file-name))
+           (message "Current buffer is not attached to any file."))
+          ((string= (buffer-substring-no-properties 1 3) "#!")
+           (compile (buffer-file-name) t))
+          (runfile (compile runfile t))
+          (t (message "Cannot find command to run.")))))
 
 (defun personal-kill-compilation ()
   "Kill current compilation."

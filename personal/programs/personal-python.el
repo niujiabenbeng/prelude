@@ -29,7 +29,7 @@
 (add-hook 'python-mode-hook #'lsp-deferred)
 
 (defun personal-python-calc-candidate-score (candidate prefix)
-  (let ((text (substring-no-properties candidate))
+  (let ((text (personal-company-get-text))
         (score 0))
     ;; put candidates from `company-capf' at the head of list
     (when (get-text-property 0 'lsp-completion-item candidate)
@@ -46,7 +46,7 @@
 
 (personal-company-add-transformer
  'python-mode
- (let ((prefix (or (company-grab-symbol) "")))
+ (let ((prefix (personal-company-get-prefix)))
    (cl-stable-sort
     candidates '> :key
     (lambda (x) (personal-python-calc-candidate-score x prefix)))))

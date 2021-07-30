@@ -29,11 +29,11 @@
       lsp-ui-sideline-ignore-duplicate t
       lsp-ui-peek-enable t
       lsp-ui-imenu-enable t
-      ;; lsp-ui-doc-enable nil
-      ;; lsp-ui-sideline-enable nil
-      ;; lsp-ui-doc-show-with-mouse nil
+      lsp-ui-doc-enable nil
+      lsp-ui-sideline-enable nil
+      lsp-ui-doc-show-with-mouse nil
       lsp-ui-doc-position 'at-point
-      ;; lsp-ui-sideline-show-hover nil
+      lsp-ui-sideline-show-hover nil
       )
 
 (prelude-require-packages '(lsp-mode lsp-ui))
@@ -41,6 +41,7 @@
 (require 'lsp-ui)
 
 (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+(advice-add #'lsp-completion--regex-fuz :override #'identity)
 
 (defun personal-lsp-find-thing-at-point ()
   "Find file or function definition at point."
