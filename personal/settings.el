@@ -58,4 +58,8 @@
 (require 'personal-shell)
 (require 'personal-emacs-lisp)
 
+;;; Other functionalities
+(require 'cpp-change-name-style)
+(require 'modeline-show-all-minor-mode)
+
 ;;; setting.el ends here
