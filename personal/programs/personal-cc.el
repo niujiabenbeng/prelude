@@ -44,7 +44,7 @@
 
 ;; disable flycheck-mode since we have an improved version of clang-tidy.
 (add-hook 'lsp-configure-hook
-          (lambda () (if (eq major-mode 'c++-mode) (flycheck-mode -1))))
+          (lambda () (if (eq major-mode 'c++-mode) (flycheck-mode -1))) t)
 
 (provide 'personal-cc)
 
