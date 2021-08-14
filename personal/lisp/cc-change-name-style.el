@@ -30,6 +30,6 @@
       (delete-region (beginning-of-thing 'symbol) (end-of-thing 'symbol))
       (save-excursion (insert new)))))
 
-(provide 'cpp-change-name-style)
+(provide 'cc-change-name-style)
 
-;;; cpp-change-name-style.el ends here
+;;; cc-change-name-style.el ends here
