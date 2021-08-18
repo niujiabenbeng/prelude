@@ -34,6 +34,7 @@
 (setq lsp-clients-clangd-args
       '("--all-scopes-completion"
         "--background-index"
+        "--clang-tidy"
         "--completion-style=detailed"
         "--cross-file-rename"
         "--fallback-style=Google"
@@ -41,10 +42,6 @@
         "--pch-storage=memory"  ; 机器内存较大的时候使用
         "--log=error"))
 (add-hook 'c-mode-common-hook #'lsp-deferred)
-
-;; disable flycheck-mode since we have an improved version of clang-tidy.
-(add-hook 'lsp-configure-hook
-          (lambda () (if (eq major-mode 'c++-mode) (flycheck-mode -1))) t)
 
 (provide 'personal-cc)
 

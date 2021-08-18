@@ -19,6 +19,9 @@
  'cmake-mode-hook
  (personal-company-get-backends 'company-cmake))
 
+;; indent json file with 4 whitespaces
+(setq json-encoding-default-indentation "    ")
+
 (provide 'personal-programming)
 
 ;;; personal-programming.el ends here
