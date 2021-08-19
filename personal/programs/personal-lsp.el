@@ -97,6 +97,17 @@
       (setq end (save-excursion (forward-line end) (line-end-position)))
       (cons beg end))))
 
+(defun personal-lsp-collect-ranges (marker)
+  "Collect ranges specified by MARKER in current buffer."
+  (let (text range ranges)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward marker nil t)
+        (setq text (match-string-no-properties 1))
+        (setq range (personal-lsp-parse-range-string text))
+        (when range (setq ranges (cons range ranges)))))
+    ranges))
+
 (defun personal-lsp-flip-ranges (ranges &optional beg end)
   "Flip ranges limited by BEG and END."
   (setq beg (or beg (point-min)))
@@ -116,15 +127,55 @@
 (defun personal-lsp-format-buffer ()
   "Format buffer while paying respect to NOFORMAT marker."
   (interactive "*")
-  (let (text range ranges)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward personal-lsp-noformat-marker nil t)
-        (setq text (match-string-no-properties 1))
-        (setq range (personal-lsp-parse-range-string text))
-        (when range (setq ranges (cons range ranges)))))
-    (dolist (item (personal-lsp-flip-ranges ranges))
-      (lsp-format-region (car item) (cdr item)))))
+  (let* ((marker personal-lsp-noformat-marker)
+         (ranges (personal-lsp-collect-ranges marker)))
+  (dolist (item (personal-lsp-flip-ranges ranges))
+    (lsp-format-region (car item) (cdr item)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; linting ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defvar personal-lsp-nolint-line-marker
+  "NOLINTLINE(\\([-0-9:]+\\))"
+  "Regexp of marker to disable linting among specific lines.")
+
+(defvar personal-lsp-nolint-field-marker
+  "NOLINTFIELD(\\([-_[:alnum:]]+\\))"
+  "Regexp of marker to discard specific errors among entire source file.")
+
+(defvar personal-lsp-nolint-ranges nil
+  "Nolint ranges specified by `personal-lsp-nolint-line-marker'.")
+
+(defvar personal-lsp-nolint-errors nil
+  "discarded erros specified by `personal-lsp-nolint-field-marker'")
+
+(defun personal-lsp-collect-nolint-ranges ()
+  "Collect nolint ranges in current buffer."
+  (setq personal-lsp-nolint-ranges
+        (personal-lsp-collect-ranges personal-lsp-nolint-line-marker)))
+
+(defun personal-lsp-collect-nolint-fields ()
+  "Collect nolint fields in current buffer."
+  (setq personal-lsp-nolint-errors nil)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward personal-lsp-nolint-field-marker nil t)
+      (setq personal-lsp-nolint-errors
+            (append personal-lsp-nolint-errors
+                    (split-string (match-string-no-properties 1) "," t))))))
+
+(defun personal-lsp-ignore-lint-errors (err)
+  (let* ((id (flycheck-error-id err))
+         (pos (flycheck-error-pos err))
+         (ranges personal-lsp-nolint-ranges)
+         (discard (member id personal-lsp-nolint-errors)))
+    (while (and ranges (not discard))
+      (setq discard (or (< pos (caar ranges)) (> pos (cadr ranges))))
+      (setq ranges (cdr ranges)))
+    discard))
+
+(add-hook 'flycheck-before-syntax-check-hook #'personal-lsp-collect-nolint-ranges)
+(add-hook 'flycheck-before-syntax-check-hook #'personal-lsp-collect-nolint-fields)
+(add-hook 'flycheck-process-error-functions  #'personal-lsp-ignore-lint-errors)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; keybinding ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
