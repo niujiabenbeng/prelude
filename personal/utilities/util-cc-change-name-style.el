@@ -8,7 +8,7 @@
 
 (require 'cc-mode)
 
-(defun personal-cc-change-name-style ()
+(defun util-cc-change-name-style ()
   "Change the style of name in c++ program."
   (interactive)
   (let ((name (thing-at-point 'symbol t)) new)
@@ -30,6 +30,6 @@
       (delete-region (beginning-of-thing 'symbol) (end-of-thing 'symbol))
       (save-excursion (insert new)))))
 
-(provide 'cc-change-name-style)
+(provide 'util-cc-change-name-style)
 
-;;; cc-change-name-style.el ends here
+;;; util-cc-change-name-style.el ends here

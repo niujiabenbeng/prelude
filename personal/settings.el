@@ -7,10 +7,10 @@
 
 (setenv "USE_EMACS" "1")
 
-(add-to-list 'load-path (expand-file-name "lisp"     prelude-personal-dir))
-(add-to-list 'load-path (expand-file-name "modules"  prelude-personal-dir))
-(add-to-list 'load-path (expand-file-name "packages" prelude-personal-dir))
-(add-to-list 'load-path (expand-file-name "programs" prelude-personal-dir))
+(add-to-list 'load-path (expand-file-name "modules"   prelude-personal-dir))
+(add-to-list 'load-path (expand-file-name "packages"  prelude-personal-dir))
+(add-to-list 'load-path (expand-file-name "programs"  prelude-personal-dir))
+(add-to-list 'load-path (expand-file-name "utilities" prelude-personal-dir))
 
 (prelude-require-packages '(s neotree psession dash yasnippet))
 
@@ -59,8 +59,8 @@
 (require 'personal-emacs-lisp)
 
 ;;; Other functionalities
-(require 'cc-adjust-header-guard)
-(require 'cc-change-name-style)
-(require 'modeline-show-all-minor-mode)
+(require 'util-cc-adjust-header-guard)
+(require 'util-cc-change-name-style)
+(require 'util-show-all-minor-mode)
 
 ;;; setting.el ends here

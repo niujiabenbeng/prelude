@@ -6,7 +6,7 @@
 
 ;;;Code:
 
-(defun personal-show-all-minor-mode ()
+(defun util-show-all-minor-mode ()
   "Show all minor modes in Helm buffer."
   (interactive)
   (declare (obsolete nil "2021.02.26"))
@@ -29,6 +29,6 @@
             :candidates minor-modes
             :action (lambda (m) (describe-minor-mode (intern m)))))))
 
-(provide 'modeline-show-all-minor-mode)
+(provide 'util-show-all-minor-mode)
 
-;;; modeline-show-all-minor-mode.el ends here
+;;; util-show-all-minor-mode.el ends here

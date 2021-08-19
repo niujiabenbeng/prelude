@@ -9,7 +9,7 @@
 (require 'cc-mode)
 (require 'personal-util)
 
-(defun personal-cc-adjust-header-guard ()
+(defun util-cc-adjust-header-guard ()
   "Adjust guard of c++ header files."
   (interactive)
   (when (buffer-file-name)
@@ -22,6 +22,6 @@
                (personal-pattern-replace)
                (save-buffer)))))))
 
-(provide 'cc-adjust-header-guard)
+(provide 'util-cc-adjust-header-guard)
 
-;;; cc-adjust-header-guard.el ends here
+;;; util-cc-adjust-header-guard.el ends here
