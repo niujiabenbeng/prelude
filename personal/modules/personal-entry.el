@@ -34,6 +34,7 @@
   "Save emacs client session."
   (unless (file-directory-p psession-elisp-objects-default-directory)
     (make-directory psession-elisp-objects-default-directory t))
+  (neotree-hide)
   (psession-save-last-winconf)
   (psession--dump-some-buffers-to-list)
   (psession--dump-object-to-file-save-alist))

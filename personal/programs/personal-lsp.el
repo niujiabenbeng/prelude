@@ -170,7 +170,7 @@
          (discard (or (member id personal-lsp-nolint-errors)
                       (member "all" personal-lsp-nolint-errors))))
     (while (and ranges (not discard))
-      (setq discard (or (< pos (caar ranges)) (> pos (cadr ranges))))
+      (setq discard (or (< pos (caar ranges)) (> pos (cdar ranges))))
       (setq ranges (cdr ranges)))
     discard))
 
