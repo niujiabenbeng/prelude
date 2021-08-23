@@ -128,9 +128,16 @@
   "Format buffer while paying respect to NOFORMAT marker."
   (interactive "*")
   (let* ((marker personal-lsp-noformat-marker)
-         (ranges (personal-lsp-collect-ranges marker)))
-  (dolist (item (personal-lsp-flip-ranges ranges))
-    (lsp-format-region (car item) (cdr item)))))
+         (ranges (personal-lsp-collect-ranges marker))
+         (offset 0) beg end)
+    (save-excursion
+      (dolist (item (personal-lsp-flip-ranges ranges))
+        ;; 因为前面format之后会改变buffer的内容, 所以这里需要加上一个offset
+        (setq beg (+ (car item) offset))
+        (setq end (+ (cdr item) offset))
+        (goto-char end)
+        (lsp-format-region beg end)
+        (setq offset (+ offset (- (point) end)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; linting ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -170,7 +177,7 @@
          (discard (or (member id personal-lsp-nolint-errors)
                       (member "all" personal-lsp-nolint-errors))))
     (while (and ranges (not discard))
-      (setq discard (or (< pos (caar ranges)) (> pos (cdar ranges))))
+      (setq discard (and (>= pos (caar ranges)) (<= pos (cdar ranges))))
       (setq ranges (cdr ranges)))
     discard))
 
