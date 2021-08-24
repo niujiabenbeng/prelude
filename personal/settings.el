@@ -62,5 +62,6 @@
 (require 'util-cc-adjust-header-guard)
 (require 'util-cc-change-name-style)
 (require 'util-show-all-minor-mode)
+(require 'util-normalize-lines)
 
 ;;; setting.el ends here

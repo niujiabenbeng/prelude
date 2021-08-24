@@ -188,19 +188,27 @@ If FILE is nil, use current visiting file as the start point."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-comment-line ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun personal-region-beginning ()
+  "Return the beginning of a region."
+  (save-excursion
+    (goto-char (region-beginning))
+    (line-beginning-position)))
+
+(defun personal-region-end ()
+  "Return the end of a region."
+  (save-excursion
+    (goto-char (region-end))
+    (if (= (point) (line-beginning-position))
+        (line-end-position 0)
+      (line-end-position))))
+
 (defun personal-comment-line ()
   "A more useful `comment-line'."
   (interactive)
   (if (or (not transient-mark-mode) (region-active-p))
       (comment-or-uncomment-region
-       (save-excursion
-         (goto-char (region-beginning))
-         (line-beginning-position))
-       (save-excursion
-         (goto-char (region-end))
-         (if (= (point) (line-beginning-position))
-             (line-end-position 0)
-           (line-end-position))))
+       (personal-region-beginning)
+       (personal-region-end))
     (comment-line 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;; personal-find-confiuration-file ;;;;;;;;;;;;;;;;;;;;;;;;
