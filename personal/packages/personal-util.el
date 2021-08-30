@@ -555,7 +555,7 @@ otherwise return nil."
       (setq name (file-name-nondirectory path))
       (setq root (projectile-project-root))
       (setq keyf (lambda (x) (length (s-shared-end path x))))
-      (unless (and (string-equal path "/") (string-empty-p name))
+      (unless (and (string-match-p "^/+$" path) (string-empty-p name))
         (when (file-exists-p path) (setq files (list path)))
         (when (and root (not files) (not (string-empty-p name)))
           (setq files (personal--jtf-find-file-by-name name root))
