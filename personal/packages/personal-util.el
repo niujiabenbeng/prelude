@@ -594,7 +594,7 @@ otherwise return nil."
               ((personal-binary-file-p path)
                (setq name (file-name-base name))
                (setq files (personal--jtf-find-file-by-name name root)))
-              ((t (setq files (list path))))))
+              (t (setq files (list path)))))
       (cl-sort (personal--jtf-filter-files files)
                #'> :key (lambda (x) (length (s-shared-end path x)))))))
 
