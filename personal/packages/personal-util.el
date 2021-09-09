@@ -21,6 +21,15 @@
       (setq string (substring string (match-end 0))))
     (reverse parts)))
 
+(defun personal-binary-file-p (path)
+  "Determine whether a file is binary or not."
+  (and (stringp path)
+       (file-exists-p path)
+       (not (file-directory-p path))
+       (let* ((cmd (format "file --mime-encoding %s" (expand-file-name path)))
+              (res (string-trim-right (shell-command-to-string cmd))))
+         (string-suffix-p "binary" res))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; personal-pattern-replace ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun personal-cutting-line-p ()
@@ -75,7 +84,7 @@
   (let ((line (or (thing-at-point 'line t) "")))
     (if (string-prefix-p "#!" line)
         (message "header is already configured.")
-      (insert "#! /bin/bash\n"))))
+      (insert "#! /bin/bash\n\ncd $(dirname $0)\n"))))
 
 (defun personal-add-shebang-c-header ()
   "Add shebang for c header file."
@@ -541,26 +550,53 @@ otherwise return nil."
 
 ;;;;;;;;;;;;;;;;;;;;;;; personal-jump-to-thing-at-point ;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar personal--jtf-ignore-patterns
+  '("\\\.d$" "\\\.o$" "\\\.bin$")
+  "Patterns of file to be ignored.")
+
+(defun personal--jtf-ignore-file-p (name)
+  "Return t if NAME is to be ignored."
+  (seq-some (lambda (x) (string-match-p x name)) personal--jtf-ignore-patterns))
+
+(defun personal--jtf-filter-files (files)
+  "Return items of FILES which is considered to be targets."
+  (seq-filter
+   (lambda (x)
+     (not (or (personal-binary-file-p x) (personal--jtf-ignore-file-p x))))
+   files))
+
 (defun personal--jtf-find-file-by-name (name root)
-  "Find file by NAME in ROOT."
-  (split-string
-   (shell-command-to-string
-    (format "find %s -type f -name '%s'" (expand-file-name root) name))))
+  "Find text file by NAME in ROOT."
+  (and (stringp name)
+       (stringp root)
+       (file-exists-p root)
+       (file-directory-p root)
+       (not (string-empty-p name))
+       (split-string
+         (shell-command-to-string
+          ;; run `grep --help' to get detailed information of options
+          (format "find %s -type f -name '*%s*' -exec grep -lI . '{}' \\\;"
+                  (expand-file-name root) name)))))
 
 (defun personal--fcf-get-files-at-point ()
   "Get filenames at current point in current project."
-  (let ((path (thing-at-point 'filename t)) name root files keyf)
-    (when path
-      (setq path (expand-file-name path))
+  (when-let ((path (thing-at-point 'filename t)))
+    (setq path (expand-file-name path))
+    (when (personal--jtf-ignore-file-p path)
+      (setq path (file-name-sans-extension path)))
+    (let (name root files)
       (setq name (file-name-nondirectory path))
       (setq root (projectile-project-root))
-      (setq keyf (lambda (x) (length (s-shared-end path x))))
-      (unless (and (string-match-p "^/+$" path) (string-empty-p name))
-        (when (file-exists-p path) (setq files (list path)))
-        (when (and root (not files) (not (string-empty-p name)))
-          (setq files (personal--jtf-find-file-by-name name root))
-          (setq files (cl-sort files #'> :key keyf)))))
-    files))
+      (unless (or (string-match-p "^/+$" path) (string-empty-p name))
+        (cond ((not (file-exists-p path))
+               (setq files (personal--jtf-find-file-by-name name root)))
+              ((file-directory-p path) nil)
+              ((personal-binary-file-p path)
+               (setq name (file-name-base name))
+               (setq files (personal--jtf-find-file-by-name name root)))
+              ((t (setq files (list path))))))
+      (cl-sort (personal--jtf-filter-files files)
+               #'> :key (lambda (x) (length (s-shared-end path x)))))))
 
 (defun personal--fcf-get-files-match-buffer-name ()
   "Get filenames whose names match the current buffer file name."
@@ -570,10 +606,11 @@ otherwise return nil."
               (files (projectile-project-files root)))
     (setq name (string-remove-prefix "test_" name))
     (setq name (string-remove-prefix "unittest_" name))
+    (setq files (mapcar (lambda (x) (expand-file-name x root)) files))
     (unless (string-empty-p name)
       (seq-filter
        (lambda (x) (s-contains-p name (file-name-nondirectory x)))
-       (delete path (mapcar (lambda (x) (expand-file-name x root)) files))))))
+       (personal--jtf-filter-files (delete path files))))))
 
 (defun personal--jtf-get-files ()
   "Get filename from current point or buffer file name."
