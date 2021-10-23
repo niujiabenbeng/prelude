@@ -88,29 +88,31 @@
 
 (defun personal-add-shebang-c-header ()
   "Add shebang for c header file."
-  (let* ((path (buffer-file-name))
-         (head (file-name-nondirectory path))
-         (posi (string-match "[^/]+/\\(include\\|src\\)/" path))
-         (line (or (thing-at-point 'line t) "")))
-    (when posi
-      (setq head (substring path posi))
-      (setq head (replace-regexp-in-string "/\\(include\\|src\\)/" "_" head)))
-    (setq head (replace-regexp-in-string "[^[:alnum:]]" "_" head))
-    (setq head (upcase (concat head "_")))
-
-    (if (string= (format "#ifndef %s\n" head) line)
-        (message "header is already configured.")
-      (if (string-prefix-p "#ifndef" line)
-          ;; 如果之前已经存在但名称不同, 则替换名称
-          (let ((text (string-trim (substring line (length "#ifndef")))))
-            (while (re-search-forward text nil t) (replace-match head)))
-        ;; 如果之前不存在, 则插入新的
-        (insert (format "#ifndef %s\n" head))
-        (insert (format "#define %s\n\n" head))
-        (goto-char (point-max))
-        (insert (format "\n#endif  // %s\n" head)))
-      ;; 跳转到第三行
-      (goto-line 3))))
+  (let ((path (buffer-file-name))
+        (root (projectile-project-root))
+        (line (or (thing-at-point 'line t) "")) head)
+    ;; 这里要求头文件必须位于project中
+    (when (and path root)
+      ;; 这一句去掉root最后的slash符号
+      (setq root (directory-file-name root))
+      (setq root (file-name-directory root))
+      (setq head (file-relative-name path root))
+      (setq head (replace-regexp-in-string "/\\(include\\|src\\)/" "_" head))
+      (setq head (replace-regexp-in-string "[^[:alnum:]]" "_" head))
+      (setq head (upcase (concat head "_")))
+      (if (string= (format "#ifndef %s\n" head) line)
+          (message "header is already configured.")
+        (if (string-prefix-p "#ifndef" line)
+            ;; 如果之前已经存在但名称不同, 则替换名称
+            (let ((text (string-trim (substring line (length "#ifndef")))))
+              (while (re-search-forward text nil t) (replace-match head)))
+          ;; 如果之前不存在, 则插入新的
+          (insert (format "#ifndef %s\n" head))
+          (insert (format "#define %s\n\n" head))
+          (goto-char (point-max))
+          (insert (format "\n#endif  // %s\n" head)))
+        ;; 跳转到第三行
+        (goto-line 3)))))
 
 (defun personal-add-shebang-elisp ()
   "Add shebang for emacs lisp file."
